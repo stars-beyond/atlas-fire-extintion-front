@@ -1,7 +1,9 @@
 // Tipos do estado da tela: qual vista está aberta, o que o palco mostra, o agente supressor e o registro de perguntas.
 import type { Answer, Verdict } from '../types'
 
-export type View = 'drive' | 'achados' | 'investigacoes' | 'proximo'
+// home: o hub de roteamento (cena orbital + cartões dos módulos); perguntar: o RAG em página própria
+export type View = 'home' | 'drive' | 'achados' | 'investigacoes' | 'proximo' | 'perguntar'
+export type DriveTab = 'evidencia' | 'lacunas' | 'apagar' | 'perguntar'
 export type StageView = 'chama' | 'mapa' | 'grafo' | 'limites'
 export type Agent = 'nenhum' | 'co2' | 'he'
 

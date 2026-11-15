@@ -23,8 +23,11 @@ const MAP_VIEWS: [MapView, string, string][] = [
   ['topo', 'Top', 'Oxygen across, pressure up, with all gravity levels stacked.'],
 ]
 
-export function Stage() {
-  const { scenario, ignited, prediction, stageView, setStageView, meta, step, agent, labOff } = useAtlas()
+// hub: a mesma cena como herói da home. O palco fica sempre no plano geral (como no passo do habitat), sem os
+// medidores (os cartões da home já mostram a telemetria), e o título vira o atalho para o laboratório 3D.
+export function Stage({ hub = false, onExplore }: { hub?: boolean; onExplore?: () => void }) {
+  const { scenario, ignited, prediction, stageView, setStageView, meta, step: ctxStep, agent, labOff } = useAtlas()
+  const step = hub ? 0 : ctxStep
   const mat = materialOf(scenario)
   const hab = meta?.habitats.find((h) => h.id === scenario.habitat)
   const labMat = LAB_MAT[mat.material]
@@ -46,7 +49,7 @@ export function Stage() {
   const flame = step === 0 ? 'sketch' : useLab3d ? 'sim' : ignited && step >= 2 ? 'sketch' : 'off'
   const strength = agent !== 'nenhum' && prediction && prediction.baseline_k_mm2_s > 0 ? Math.max(0.12, Math.min(1.4, Math.pow(prediction.k_mm2_s / prediction.baseline_k_mm2_s, 3))) : 1
   return (
-    <section className={`stage v-${stageView}`} aria-label="Stage">
+    <section className={`stage v-${stageView}${hub ? ' hub' : ''}`} aria-label="Stage">
       {stageView === 'limites' ? <LimitsStage /> : stageView === 'grafo' ? <GraphStage /> : stageView === 'mapa' ? <MapStage view={mapView} />
         : (
           <>
@@ -55,7 +58,12 @@ export function Stage() {
           </>
         )}
       <div className="stage-top">
-        {stageView === 'chama' ? (
+        {stageView === 'chama' && hub ? (
+          <div className="stage-title">
+            <button className="hub-explore" onClick={onExplore}>Explore the 3D lab<span className="hub-arrow" aria-hidden /></button>
+            <span className="hub-hab">{hab ? hab.name : 'Custom environment'}</span>
+          </div>
+        ) : stageView === 'chama' ? (
           <div className="stage-title">
             <span className="eyebrow">{inScene ? 'Where the test runs' : hab ? hab.name : 'Custom environment'}</span>
             <span className="stage-mat">{inScene ? (hab ? hab.name : 'Custom environment') : mat.name}</span>
@@ -81,22 +89,24 @@ export function Stage() {
             <p>Right of the curve the flame keeps burning; left of it, it goes out. Drag the yellow dot to try other air conditions.</p>
           </div>
         )}
-        <div className="toggle" role="group" aria-label="What to show on the stage">
-          <button aria-pressed={stageView === 'chama'} onClick={() => setStageView('chama')}>Flame</button>
-          <button aria-pressed={stageView === 'limites'} onClick={() => setStageView('limites')}>Limits</button>
-          <button aria-pressed={stageView === 'mapa'} onClick={() => setStageView('mapa')}>Map</button>
-          <button aria-pressed={stageView === 'grafo'} onClick={() => setStageView('grafo')}>Graph</button>
-        </div>
+        {!hub && (
+          <div className="toggle" role="group" aria-label="What to show on the stage">
+            <button aria-pressed={stageView === 'chama'} onClick={() => setStageView('chama')}>Flame</button>
+            <button aria-pressed={stageView === 'limites'} onClick={() => setStageView('limites')}>Limits</button>
+            <button aria-pressed={stageView === 'mapa'} onClick={() => setStageView('mapa')}>Map</button>
+            <button aria-pressed={stageView === 'grafo'} onClick={() => setStageView('grafo')}>Graph</button>
+          </div>
+        )}
       </div>
       {stageView === 'chama' && (
         <>
           {useLab3d && !inScene && <LabHud />}
           <div className="stage-foot">
-          <div className="gauges compact" aria-label="Environment atmosphere">
+          {!hub && <div className="gauges compact" aria-label="Environment atmosphere">
             <div><b>{pct(scenario.o2, scenario.o2 * 100 % 1 ? 1 : 0)}</b><span>oxygen</span></div>
             <div><b>{nf(scenario.pressure_atm * 14.696, 1)}</b><span>psi pressure</span></div>
             <div><b>{scenario.gravity <= 0.005 ? '0' : nf(scenario.gravity, 2)} g</b><span>gravity</span></div>
-          </div>
+          </div>}
           <p className="stage-hint">
             <span className="hint-long">{inScene
               ? 'The point of light marks the test rig inside the habitat. Click another habitat in the scene to go there; drag to rotate. The setting is illustrative.'

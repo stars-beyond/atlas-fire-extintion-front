@@ -1,9 +1,11 @@
-// A casca do app: cabeçalho, e o test drive (palco + passo + barra) ou uma das páginas do acervo.
+// A casca do app: a home (hub de roteamento) ou, com cabeçalho, o test drive (palco + passo + barra) ou uma das páginas do acervo.
 import { Stage } from '../features/stage/Stage'
 import { FichaStep } from '../features/configurator/FichaStep'
 import { HabitatStep } from '../features/configurator/HabitatStep'
 import { MaterialStep } from '../features/configurator/MaterialStep'
 import { TestDriveStep } from '../features/configurator/TestDrive'
+import { Perguntar } from '../features/ask/Perguntar'
+import { Hub } from '../features/home/Hub'
 import { Achados } from '../features/findings/Achados'
 import { Expedicoes } from '../features/investigations/Expedicoes'
 import { ProximoFogo } from '../features/next-fire/ProximoFogo'
@@ -24,6 +26,7 @@ export function App() {
     )
   }
   if (!meta) return <div className="boot"><p>Opening the NASA archive…</p></div>
+  if (view === 'home') return <div className="shell home"><Hub /></div>
   return (
     <div className={`shell${view === 'drive' ? '' : ' browsing'}`}>
       <Header />
@@ -37,7 +40,8 @@ export function App() {
           </main>
           <SpecBar />
         </>
-      ) : view === 'achados' ? <Achados /> : view === 'proximo' ? <ProximoFogo /> : <Expedicoes />}
+      ) : view === 'achados' ? <Achados /> : view === 'proximo' ? <ProximoFogo />
+        : view === 'perguntar' ? <main className="page"><div className="page-in ask-page"><Perguntar /></div></main> : <Expedicoes />}
     </div>
   )
 }

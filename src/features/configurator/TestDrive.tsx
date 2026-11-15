@@ -1,17 +1,13 @@
 // Passo 3: o test drive. Acender, ler o que a NASA sabe, tentar apagar e perguntar.
-import { useState } from 'react'
 import { Gaps } from '../../components/Gaps'
 import { gLabel, pct, psi } from '../../lib/format'
-import { materialOf, useAtlas } from '../../state'
+import { materialOf, useAtlas, type DriveTab } from '../../state'
 import { Perguntar } from '../ask/Perguntar'
 import { Apagar } from './tabs/Apagar'
 import { Evidencia } from './tabs/Evidencia'
 
-type Tab = 'evidencia' | 'lacunas' | 'apagar' | 'perguntar'
-
 export function TestDriveStep() {
-  const { ignited, ignite, scenario, meta, setStageView, described } = useAtlas()
-  const [tab, setTab] = useState<Tab>('evidencia')
+  const { ignited, ignite, scenario, meta, setStageView, described, driveTab: tab, setDriveTab: setTab } = useAtlas()
   const mat = materialOf(scenario)
   const hab = meta?.habitats.find((h) => h.id === scenario.habitat)
   if (!ignited) {
@@ -30,7 +26,7 @@ export function TestDriveStep() {
       </div>
     )
   }
-  const tabs: [Tab, string][] = [['evidencia', 'Evidence'], ['lacunas', 'Gaps'], ['apagar', 'Put it out'], ['perguntar', 'Ask']]
+  const tabs: [DriveTab, string][] = [['evidencia', 'Evidence'], ['lacunas', 'Gaps'], ['apagar', 'Put it out'], ['perguntar', 'Ask']]
   return (
     <div className="step">
       <header className="step-head tight">

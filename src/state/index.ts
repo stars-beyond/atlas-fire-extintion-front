@@ -2,4 +2,4 @@
 export { AtlasProvider, useAtlas } from './AtlasProvider'
 export { setLab, useLab, type LabState } from './labState'
 export { LAB_MAT, MATERIALS, STEPS, VENT_CM_S, WIND_MAX, materialOf, type MaterialOption } from './materials'
-export type { Agent, LogEntry, StageView, View } from './types'
+export type { Agent, DriveTab, LogEntry, StageView, View } from './types'

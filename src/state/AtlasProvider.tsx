@@ -4,7 +4,7 @@ import { api } from '../api'
 import { labBlocker } from '../lib/gpu'
 import type { Investigation, MatrixCell, Meta, NextTest, Prediction, Ranked, Scenario, Test, Verdict } from '../types'
 import { STEPS, VENT_CM_S, WIND_MAX } from './materials'
-import type { Agent, LogEntry, StageView, View } from './types'
+import type { Agent, DriveTab, LogEntry, StageView, View } from './types'
 
 interface Ctx {
   meta: Meta | null; invs: Investigation[]; tests: Test[]; loadError: string | null
@@ -12,6 +12,9 @@ interface Ctx {
   scenario: Scenario; setScenario: (patch: Partial<Scenario>, habitat?: string, keep?: boolean) => void
   verdict: Verdict | null; matrix: MatrixCell[]; ranking: Ranked[]
   step: number; setStep: (n: number) => void
+  driveTab: DriveTab; setDriveTab: (t: DriveTab) => void
+  // envia a pergunta ao RAG e já abre o 3D Lab no passo 3 (Test drive) na aba Ask
+  askFromHub: (q: string) => void
   view: View; setView: (v: View) => void
   stageView: StageView; setStageView: (v: StageView) => void
   ignited: boolean; ignite: () => void; restart: () => void
@@ -20,6 +23,9 @@ interface Ctx {
   wind: number; setWind: (cm_s: number) => void   // vento da ventilação, em cm/s; vent é só "wind > 0"
   labOff: string | null; setLabOff: (why: string | null) => void
   described: string[]; describe: (text: string) => Promise<boolean>
+  // o mesmo entendimento da frase, mas sem sair da tela atual (busca do hub): devolve o que entendeu, ou null
+  inferScenario: (text: string) => Promise<string[] | null>
+  goHome: () => void
   selectedTest: string | null; selectTest: (id: string | null) => void
   selectedInv: string | null; selectInv: (id: string | null) => void
   // o que falta testar para o material escolhido: a mesma lista alimenta o painel, a ficha e o mapa
@@ -41,7 +47,8 @@ export function AtlasProvider({ children }: { children: ReactNode }) {
   const [matrix, setMatrix] = useState<MatrixCell[]>([])
   const [ranking, setRanking] = useState<Ranked[]>([])
   const [step, setStepRaw] = useState(0)
-  const [view, setView] = useState<View>('drive')
+  const [driveTab, setDriveTab] = useState<DriveTab>('evidencia')
+  const [view, setView] = useState<View>('home')
   const [stageView, setStageView] = useState<StageView>('chama')
   const [ignited, setIgnited] = useState(false)
   const [agent, setAgentRaw] = useState<Agent>('nenhum')
@@ -115,6 +122,15 @@ export function AtlasProvider({ children }: { children: ReactNode }) {
     lastWind.current = VENT_CM_S; setWindRaw(VENT_CM_S); setAgentRaw('nenhum'); setDescribed(r.understood); setIgnited(false); setStepRaw(2)
     return true
   }, [scenario])
+  const inferScenario = useCallback(async (text: string) => {
+    const r = await api.infer(text, scenario)
+    if (!r.understood.length) return null
+    setSc({ ...r.scenario, material: r.scenario.material || '', habitat: r.scenario.habitat || '' })
+    lastWind.current = VENT_CM_S; setWindRaw(VENT_CM_S); setAgentRaw('nenhum'); setDescribed(r.understood); setIgnited(false)
+    return r.understood
+  }, [scenario])
+  // a home sempre mostra a cena orbital, qualquer que tenha sido a vista do palco antes
+  const goHome = useCallback(() => { setView('home'); setStageView('chama'); setSelTest(null) }, [])
   const ignite = useCallback(() => setIgnited(true), [])
   const restart = useCallback(() => { setDescribed([]); setIgnited(false); setAgentRaw('nenhum'); lastWind.current = VENT_CM_S; setWindRaw(VENT_CM_S); setStepRaw(0); setStageView('chama'); setSelTest(null) }, [])
   const reignite = useCallback(() => { setIgnited(true); setIgniteSeq((n) => n + 1) }, [])
@@ -140,11 +156,22 @@ export function AtlasProvider({ children }: { children: ReactNode }) {
       .catch((e) => setLog((l) => l.map((x) => (x.id === id ? { ...x, error: e.message, pending: false, partial: undefined } : x))))
   }, [scenario])
 
+  const askFromHub = useCallback((q: string) => {
+    const question = q.trim()
+    if (!question) return
+    setIgnited(true)
+    setDriveTab('perguntar')
+    setStageView('chama')
+    setStepRaw(2)
+    setView('drive')
+    ask(question)
+  }, [ask])
+
   const value = useMemo<Ctx>(() => ({
-    meta, invs, tests, loadError, scenario, setScenario, verdict, matrix, ranking, step, setStep, view, setView, stageView, setStageView,
+    meta, invs, tests, loadError, scenario, setScenario, verdict, matrix, ranking, step, setStep, driveTab, setDriveTab, askFromHub, view, setView, stageView, setStageView,
     ignited, ignite, restart, agent, conc, setAgent, setConc, prediction, selectedTest, selectTest, selectedInv, selectInv, log, ask,
-    vent, setVent, wind, setWind, igniteSeq, reignite, labOff, setLabOff, described, describe, gaps, selectedGap, selectGap,
-  }), [gaps, selectedGap, meta, invs, tests, loadError, scenario, setScenario, verdict, matrix, ranking, step, setStep, view, stageView,
+    vent, setVent, wind, setWind, igniteSeq, reignite, labOff, setLabOff, described, describe, inferScenario, goHome, gaps, selectedGap, selectGap,
+  }), [driveTab, askFromHub, inferScenario, goHome, gaps, selectedGap, meta, invs, tests, loadError, scenario, setScenario, verdict, matrix, ranking, step, setStep, view, stageView,
     ignited, ignite, restart, agent, conc, setAgent, prediction, selectedTest, selectTest, selectedInv, selectInv, log, ask, vent, wind, setVent, setWind, igniteSeq, reignite, labOff, described, describe])
   return <C.Provider value={value}>{children}</C.Provider>
 }
