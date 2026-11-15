@@ -10,6 +10,6 @@ export async function j<T>(path: string, body?: unknown): Promise<T> {
     method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body),
   })
   const data = await res.json().catch(() => ({}))
-  if (!res.ok) throw new Error(data.error || `O servidor respondeu ${res.status}`)
+  if (!res.ok) throw new Error(data.error || `The server responded with ${res.status}`)
   return data as T
 }

@@ -39,17 +39,17 @@ export function MapStage({ view }: { view: MapView }) {
       <div ref={host} className="map-host" />
       <div ref={lab} className="map-labels" />
       <div className="map-legend">
-        <div className="map-mode" role="group" aria-label="O que a cor dos pontos mostra">
-          <button aria-pressed={mode === 'familia'} onClick={() => setMode('familia')}>Tipo</button>
-          <button aria-pressed={mode === 'desfecho'} onClick={() => setMode('desfecho')}>Resultado</button>
+        <div className="map-mode" role="group" aria-label="What the dot color shows">
+          <button aria-pressed={mode === 'familia'} onClick={() => setMode('familia')}>Type</button>
+          <button aria-pressed={mode === 'desfecho'} onClick={() => setMode('desfecho')}>Outcome</button>
         </div>
         {LEGENDS[mode].map(([label, v]) => <span key={label}><i style={{ background: `var(${v})` }} />{label}</span>)}
-        <span><i style={{ background: 'var(--act)' }} />Seu cenário</span>
-        {gaps.length > 0 && <span><i className="ring" />Falta testar</span>}
+        <span><i style={{ background: 'var(--act)' }} />Your scenario</span>
+        {gaps.length > 0 && <span><i className="ring" />Untested</span>}
       </div>
       {gaps.length > 0 && (
-        <aside className="map-gaps" aria-label="O que falta testar">
-          <span className="cap">O que falta testar</span>
+        <aside className="map-gaps" aria-label="What still needs testing">
+          <span className="cap">What still needs testing</span>
           {gaps.map((g, i) => (
             <button key={i} aria-pressed={selectedGap === i} onClick={() => selectGap(selectedGap === i ? null : i)}>
               <span className="n">{i + 1}</span><span>{gapLabel(g)}</span>
@@ -59,7 +59,7 @@ export function MapStage({ view }: { view: MapView }) {
             <div className="map-gap-why">
               <b>{gap.platform}</b>
               {gap.closes.map((c) => <span key={c}>{c}</span>)}
-              <button className="link" onClick={() => setScenario({ o2: gap.o2, pressure_atm: gap.pressure_atm, gravity: gap.gravity }, '')}>Levar meu cenário até lá</button>
+              <button className="link" onClick={() => setScenario({ o2: gap.o2, pressure_atm: gap.pressure_atm, gravity: gap.gravity }, '')}>Move my scenario there</button>
             </div>
           )}
         </aside>
@@ -68,7 +68,7 @@ export function MapStage({ view }: { view: MapView }) {
         <div className="map-tip" style={{ left: Math.min(tip.x + 14, (host.current?.clientWidth ?? 600) - 250), top: tip.y + 14 }}>
           <b>{invName(tip.t.inv)} · {tip.t.label}</b>
           <span>{FAMILY[tip.t.family]} · {pct(tip.t.o2!)} O₂ · {psi(tip.t.p!)} · {gLabel(tip.t.g)}</span>
-          <span>Resultado: {OUTCOME[tip.t.outcome]}</span>
+          <span>Outcome: {OUTCOME[tip.t.outcome]}</span>
         </div>
       )}
     </>

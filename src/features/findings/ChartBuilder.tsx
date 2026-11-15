@@ -58,8 +58,8 @@ export function ChartBuilder() {
 
   const def = datasets.find((d) => d.id === draft?.dataset)
   const cdef = datasets.find((d) => d.id === cfg?.dataset)
-  if (err) return <p className="empty">Não foi possível carregar os dados do construtor. {err}</p>
-  if (!draft || !cfg || !def || !cdef) return <p className="empty">Carregando os conjuntos de dados…</p>
+  if (err) return <p className="empty">Could not load the chart builder data. {err}</p>
+  if (!draft || !cfg || !def || !cdef) return <p className="empty">Loading datasets…</p>
 
   const yv = cdef.numeric.find((v) => v.key === cfg.y), xv = cdef.numeric.find((v) => v.key === cfg.x)
   const setDataset = (id: string) => { const d = datasets.find((x) => x.id === id); if (d) setDraft(defaultConfig(d)) }
@@ -75,7 +75,7 @@ export function ChartBuilder() {
     img.onload = () => {
       const c = document.createElement('canvas'); c.width = width * 2; c.height = height * 2
       const ctx = c.getContext('2d')!; ctx.fillStyle = css.getPropertyValue('--ink-1'); ctx.fillRect(0, 0, c.width, c.height)
-      ctx.scale(2, 2); ctx.drawImage(img, 0, 0); download('atlas-grafico.png', c.toDataURL('image/png'))
+      ctx.scale(2, 2); ctx.drawImage(img, 0, 0); download('atlas-chart.png', c.toDataURL('image/png'))
     }
     img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(resolved)
   }
@@ -85,48 +85,48 @@ export function ChartBuilder() {
   return (
     <div className="builder">
       <form className="card builder-form" onSubmit={(e) => { e.preventDefault(); setCfg(draft); setPicked(null) }}>
-        <h2>Monte seu gráfico</h2>
-        <label className="fld"><span>Conjunto de dados</span>
+        <h2>Build your chart</h2>
+        <label className="fld"><span>Dataset</span>
           <select value={draft.dataset} onChange={(e) => setDataset(e.target.value)}>
-            {datasets.map((d) => (<option key={d.id} value={d.id}>{d.label} · {nf(d.rows)} registros</option>))}
+            {datasets.map((d) => (<option key={d.id} value={d.id}>{d.label} · {nf(d.rows)} {d.rows === 1 ? 'record' : 'records'}</option>))}
           </select></label>
-        <label className="fld"><span>Tipo de gráfico</span>
+        <label className="fld"><span>Chart type</span>
           <select value={draft.type} onChange={(e) => set({ type: e.target.value as ChartType })}>
             {(Object.keys(TYPE_LABEL) as ChartType[]).filter((k) => k !== 'bar' || def.categorical.length > 0).map((k) => (<option key={k} value={k}>{TYPE_LABEL[k]}</option>))}
           </select></label>
         {draft.type === 'scatter' && (
-          <label className="fld"><span>Eixo X</span>
+          <label className="fld"><span>X axis</span>
             <select value={draft.x} onChange={(e) => set({ x: e.target.value })}>{def.numeric.map((v) => (<option key={v.key} value={v.key}>{unit(v)}</option>))}</select></label>
         )}
-        <label className="fld"><span>{draft.type === 'histogram' ? 'Variável' : 'Eixo Y'}</span>
+        <label className="fld"><span>{draft.type === 'histogram' ? 'Variable' : 'Y axis'}</span>
           <select value={draft.y} onChange={(e) => set({ y: e.target.value })}>{def.numeric.map((v) => (<option key={v.key} value={v.key}>{unit(v)}</option>))}</select></label>
         {draft.type !== 'histogram' && def.categorical.length > 0 && (
-          <label className="fld"><span>{draft.type === 'bar' ? 'Agrupar por' : 'Cor por'}</span>
+          <label className="fld"><span>{draft.type === 'bar' ? 'Group by' : 'Color by'}</span>
             <select value={draft.group} onChange={(e) => set({ group: e.target.value })}>
-              {draft.type === 'scatter' && <option value="">Sem agrupamento</option>}
+              {draft.type === 'scatter' && <option value="">No grouping</option>}
               {def.categorical.map((v) => (<option key={v.key} value={v.key}>{v.label}</option>))}
             </select></label>
         )}
         {draft.type === 'histogram' && (
-          <label className="fld"><span>Classes: {draft.bins}</span>
+          <label className="fld"><span>Bins: {draft.bins}</span>
             <input type="range" min={3} max={20} value={draft.bins} onChange={(e) => set({ bins: +e.target.value })} style={{ ['--fill' as string]: `${((draft.bins - 3) / 17) * 100}%` }} /></label>
         )}
         {def.categorical.length > 0 && (
-          <label className="fld"><span>Filtrar por</span>
+          <label className="fld"><span>Filter by</span>
             <select value={draft.filterKey} onChange={(e) => set({ filterKey: e.target.value, filterValue: '' })}>
-              <option value="">Sem filtro</option>{def.categorical.map((v) => (<option key={v.key} value={v.key}>{v.label}</option>))}
+              <option value="">No filter</option>{def.categorical.map((v) => (<option key={v.key} value={v.key}>{v.label}</option>))}
             </select>
             {draft.filterKey && (
-              <select aria-label="Valor do filtro" value={draft.filterValue} onChange={(e) => set({ filterValue: e.target.value })}>
-                <option value="">Todos</option>{filterOptions.map((o) => (<option key={o}>{o}</option>))}
+              <select aria-label="Filter value" value={draft.filterValue} onChange={(e) => set({ filterValue: e.target.value })}>
+                <option value="">All</option>{filterOptions.map((o) => (<option key={o}>{o}</option>))}
               </select>
             )}</label>
         )}
-        <button className="cta" type="submit">Gerar gráfico</button>
+        <button className="cta" type="submit">Generate chart</button>
         <div className="builder-actions">
           <button type="button" className="ghost" disabled={!chart || chart.used + chart.missing === 0} onClick={() => download(`atlas-${cdef.id}.csv`, api.csvUrl(cfg))}>CSV</button>
           <button type="button" className="ghost" onClick={exportPng}>PNG</button>
-          <button type="button" className="ghost" onClick={() => { try { localStorage.setItem(STORAGE, JSON.stringify(cfg)) } catch { /* armazenamento indisponível */ } setSaved(true); setTimeout(() => setSaved(false), 1500) }}>{saved ? 'Salvo' : 'Salvar'}</button>
+          <button type="button" className="ghost" onClick={() => { try { localStorage.setItem(STORAGE, JSON.stringify(cfg)) } catch { /* armazenamento indisponível */ } setSaved(true); setTimeout(() => setSaved(false), 1500) }}>{saved ? 'Saved' : 'Save'}</button>
         </div>
       </form>
 
@@ -134,39 +134,39 @@ export function ChartBuilder() {
         <div className="card">
           <div className="sec-title">
             <h2>{TYPE_LABEL[cfg.type]} · {cfg.type === 'scatter' && xv ? `${xv.label} × ` : ''}{yv?.label}</h2>
-            {chart && <span className="badges"><span className="pill">{nf(chart.used)} usados</span><span className="pill" style={{ color: 'var(--parcial)', borderColor: 'var(--parcial)' }}>{nf(chart.missing)} ausentes</span></span>}
+            {chart && <span className="badges"><span className="pill">{nf(chart.used)} used</span><span className="pill" style={{ color: 'var(--parcial)', borderColor: 'var(--parcial)' }}>{nf(chart.missing)} missing</span></span>}
           </div>
           <div ref={chartRef}>
-            {chart ? <ChartView chart={chart} xLabel={unit(xv)} yLabel={unit(yv)} onPick={cfg.type === 'scatter' ? setPicked : undefined} /> : <p className="empty">Carregando os registros…</p>}
+            {chart ? <ChartView chart={chart} xLabel={unit(xv)} yLabel={unit(yv)} onPick={cfg.type === 'scatter' ? setPicked : undefined} /> : <p className="empty">Loading records…</p>}
           </div>
           <dl className="kv">
-            <dt>Conjunto</dt><dd>{cdef.label}{cfg.filterKey && cfg.filterValue ? ` · filtro: ${cfg.filterValue}` : ''}</dd>
-            <dt>Origem</dt><dd className="mono">{cdef.files.length <= 2 ? cdef.files.join(' · ') : `${cdef.files.length} tabelas experimentais do PSI`}</dd>
-            {yv && (<><dt>Coluna Y</dt><dd className="mono">“{yv.column}”{yv.unit ? ` · ${yv.unit}` : ''}</dd></>)}
-            {cfg.type === 'scatter' && xv && (<><dt>Coluna X</dt><dd className="mono">“{xv.column}”{xv.unit ? ` · ${xv.unit}` : ''}</dd></>)}
-            <dt>Ausentes</dt><dd>Células vazias ou só com texto ficam de fora, nunca viram zero.</dd>
+            <dt>Dataset</dt><dd>{cdef.label}{cfg.filterKey && cfg.filterValue ? ` · filter: ${cfg.filterValue}` : ''}</dd>
+            <dt>Source</dt><dd className="mono">{cdef.files.length <= 2 ? cdef.files.join(' · ') : `${cdef.files.length} PSI experiment tables`}</dd>
+            {yv && (<><dt>Y column</dt><dd className="mono">“{yv.column}”{yv.unit ? ` · ${yv.unit}` : ''}</dd></>)}
+            {cfg.type === 'scatter' && xv && (<><dt>X column</dt><dd className="mono">“{xv.column}”{xv.unit ? ` · ${xv.unit}` : ''}</dd></>)}
+            <dt>Missing</dt><dd>Empty or text-only cells are left out; they never become zero.</dd>
           </dl>
-          {cfg.type === 'scatter' && <p className="note">Clique num ponto para abrir o registro original.</p>}
+          {cfg.type === 'scatter' && <p className="note">Click a point to open the original record.</p>}
         </div>
 
         <div className="card">
-          <h2>Do ponto ao registro da NASA</h2>
-          {!picked ? <p className="note">Nenhum ponto selecionado.</p> : !detail ? <p className="note">Abrindo o registro…</p> : (
+          <h2>From point to NASA record</h2>
+          {!picked ? <p className="note">No point selected.</p> : !detail ? <p className="note">Opening record…</p> : (
             <>
               <p className="mono">{detail.source}</p>
               <div className="tbl-wrap"><table><tbody>
                 {Object.entries(detail.raw || {}).filter(([k]) => k).map(([k, v]) => (
-                  <tr key={k}><td className="dim">{k}</td><td>{v === '' ? <span style={{ color: 'var(--parcial)' }}>vazio</span> : String(v)}</td></tr>
+                  <tr key={k}><td className="dim">{k}</td><td>{v === '' ? <span style={{ color: 'var(--parcial)' }}>empty</span> : String(v)}</td></tr>
                 ))}
               </tbody></table></div>
               <div className="badges">
-                <a href={`https://psi.nasa.gov/physci/repo/data/investigations/${t.investigation_id}`} target="_blank" rel="noreferrer">Registro {t.investigation_id} no NASA PSI</a>
-                {t.o2 != null && t.pressure_atm != null && <button className="ghost" onClick={drive}>Fazer o test drive nesta condição</button>}
+                <a href={`https://psi.nasa.gov/physci/repo/data/investigations/${t.investigation_id}`} target="_blank" rel="noreferrer">Record {t.investigation_id} in NASA PSI</a>
+                {t.o2 != null && t.pressure_atm != null && <button className="ghost" onClick={drive}>Test drive this condition</button>}
               </div>
             </>
           )}
         </div>
-        {note && <p className="note">{note} Construtor de gráficos vindo do dashboard COSMOEX FLAME da equipe.</p>}
+        {note && <p className="note">{note} Chart builder adapted from the team's COSMOEX FLAME dashboard.</p>}
       </div>
     </div>
   )

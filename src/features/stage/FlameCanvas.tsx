@@ -108,5 +108,5 @@ export function FlameCanvas(props: FlameProps) {
     draw()
     return () => cancelAnimationFrame(raf)
   }, [])
-  return <canvas ref={ref} className="flame-canvas" role="img" aria-label="Ilustração da chama neste ambiente" />
+  return <canvas ref={ref} className="flame-canvas" role="img" aria-label="Illustration of the flame in this environment" />
 }

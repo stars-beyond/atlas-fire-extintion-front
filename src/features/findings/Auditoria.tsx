@@ -3,21 +3,21 @@
 // Cada item diz o que está em cada fonte, onde, e por que chama a atenção.
 import { useEffect, useMemo, useState } from 'react'
 import { api } from '../../api'
-import { nf } from '../../lib/format'
+import { fmtDate, nf } from '../../lib/format'
 import type { AuditItem, Flammability } from '../../types'
 
 const SEV: { id: AuditItem['severity']; title: string; sub: string; color: string }[] = [
-  { id: 'alta', title: 'Valor que não pode ser usado', sub: 'Está na tabela do PSI e não é uma medida.', color: 'var(--incognita)' },
-  { id: 'média', title: 'As duas fontes não batem', sub: 'Tabela e relatório dizem coisas diferentes.', color: 'var(--parcial)' },
-  { id: 'baixa', title: 'Para conferir', sub: 'Não muda os dados, mas pede uma olhada.', color: 'var(--faint)' },
+  { id: 'alta', title: 'Unusable value', sub: 'It is in the PSI table but is not a measurement.', color: 'var(--incognita)' },
+  { id: 'média', title: 'The two sources disagree', sub: 'The table and the report say different things.', color: 'var(--parcial)' },
+  { id: 'baixa', title: 'Worth checking', sub: 'Does not change the data, but deserves a look.', color: 'var(--faint)' },
 ]
-const show = (v: number | string | null, field = '') => (v == null ? (field === 'teste' ? 'ausente' : 'em branco') : typeof v === 'number' ? nf(v, Number.isInteger(v) ? 0 : 1) : v)
-const where = (a: AuditItem) => [a.table_row ? `tabela, linha ${a.table_row}` : '', a.report_page ? `relatório, p. ${a.report_page}` : ''].filter(Boolean).join(' · ')
+const show = (v: number | string | null, field = '') => (v == null ? (field === 'teste' ? 'missing' : 'blank') : typeof v === 'number' ? nf(v, Number.isInteger(v) ? 0 : 1) : v)
+const where = (a: AuditItem) => [a.table_row ? `table, row ${a.table_row}` : '', a.report_page ? `report, p. ${a.report_page}` : ''].filter(Boolean).join(' · ')
 
 function markdown(d: Flammability) {
-  const L = [`# Auditoria da tabela do ${d.name} no PSI`, '', `Atlas de Extinção, ${new Date().toLocaleDateString('pt-BR')}.`,
-    `Tabela: PSI-25, tabela experimental do BASS-II (${d.summary.tests} testes). Relatório: ${d.report.title}, ${d.report.number}, ${d.report.section} (${d.report.url}).`, '',
-    '| Teste | Campo | Na tabela do PSI | No relatório | O que há | Onde |', '|---|---|---|---|---|---|',
+  const L = [`# Audit of the ${d.name} table in PSI`, '', `Extinction Atlas, ${fmtDate(new Date())}.`,
+    `Table: PSI-25, BASS-II experiment table (${d.summary.tests} tests). Report: ${d.report.title}, ${d.report.number}, ${d.report.section} (${d.report.url}).`, '',
+    '| Test | Field | In the PSI table | In the report | Issue | Where |', '|---|---|---|---|---|---|',
     ...d.audit.map((a) => `| ${a.test} | ${a.field} | ${show(a.table, a.field)} | ${show(a.report, a.field)} | ${a.kind}. ${a.note} | ${where(a)} |`)]
   return L.join('\n')
 }
@@ -28,15 +28,15 @@ export function Auditoria() {
   const [copied, setCopied] = useState(false)
   useEffect(() => { api.flammability().then(setD).catch((e) => setErr(e.message)) }, [])
   const md = useMemo(() => (d?.available ? markdown(d) : ''), [d])
-  if (err) return <p className="empty">Não foi possível carregar a auditoria. {err}</p>
-  if (!d) return <p className="empty">Conferindo…</p>
-  if (!d.available) return <p className="empty">Os desfechos ainda não foram carregados no banco.</p>
+  if (err) return <p className="empty">Could not load the audit. {err}</p>
+  if (!d) return <p className="empty">Checking…</p>
+  if (!d.available) return <p className="empty">The outcomes have not been loaded into the database yet.</p>
   const copy = () => navigator.clipboard?.writeText(md).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000) }).catch(() => {})
   return (
     <>
       <p className="lede">
-        A tabela do {d.name} no PSI e o relatório da NASA descrevem os mesmos {d.summary.tests} testes. Conferimos uma fonte contra a outra: seis números por teste, a presença de cada teste e a numeração.
-        Apareceram {d.audit.length} pontos.
+        The {d.name} table in PSI and the NASA report describe the same {d.summary.tests} tests. We checked one source against the other: six numbers per test, whether each test is present, and the numbering.
+        {d.audit.length} {d.audit.length === 1 ? 'issue' : 'issues'} came up.
       </p>
       <div className="counts audit-counts">
         {SEV.map((s) => (
@@ -57,8 +57,8 @@ export function Auditoria() {
                   <div className="sec-title"><h3>{a.test} · {a.field}</h3><span className="pill">{a.kind}</span></div>
                   {(a.table != null || a.report != null) && (
                     <dl className="audit-pair">
-                      <div><dt>Na tabela do PSI</dt><dd>{show(a.table, a.field)}</dd></div>
-                      <div><dt>No relatório</dt><dd>{show(a.report, a.field)}</dd></div>
+                      <div><dt>In the PSI table</dt><dd>{show(a.table, a.field)}</dd></div>
+                      <div><dt>In the report</dt><dd>{show(a.report, a.field)}</dd></div>
                     </dl>
                   )}
                   <p>{a.note}</p>
@@ -70,12 +70,12 @@ export function Auditoria() {
         )
       })}
       <div className="actions no-print">
-        <button className="cta" onClick={copy}>{copied ? 'Copiada' : 'Copiar a lista para enviar'}</button>
-        <button className="ghost" onClick={() => window.print()}>Imprimir ou salvar em PDF</button>
+        <button className="cta" onClick={copy}>{copied ? 'Copied' : 'Copy the list to share'}</button>
+        <button className="ghost" onClick={() => window.print()}>Print or save as PDF</button>
       </div>
       <p className="note">
-        Fontes: tabela experimental do PSI-25 e <a href={d.report.url} target="_blank" rel="noreferrer">{d.report.number}</a>, {d.report.section}.
-        A conferência é automática e só olha o que as duas fontes têm em comum; ela não diz qual das duas está certa.
+        Sources: PSI-25 experiment table and <a href={d.report.url} target="_blank" rel="noreferrer">{d.report.number}</a>, {d.report.section}.
+        The check is automatic and only looks at what the two sources have in common; it does not say which one is right.
       </p>
     </>
   )

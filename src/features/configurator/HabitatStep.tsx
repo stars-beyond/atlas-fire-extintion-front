@@ -34,13 +34,13 @@ function Describe() {
   }
   return (
     <form className="describe" onSubmit={(e) => { e.preventDefault(); go() }}>
-      <label htmlFor="desc">Ou descreva com suas palavras</label>
+      <label htmlFor="desc">Or describe it in your own words</label>
       <div className="describe-row">
-        <input id="desc" value={text} onChange={(e) => setText(e.target.value)} placeholder="Ex.: rover lunar com 34% de oxigênio e bancos de Nomex" />
-        <button className="cta" type="submit" disabled={!text.trim() || state === 'busy'}>{state === 'busy' ? 'Lendo…' : 'Montar'}</button>
+        <input id="desc" value={text} onChange={(e) => setText(e.target.value)} placeholder="E.g. lunar rover with 34% oxygen and Nomex seats" />
+        <button className="cta" type="submit" disabled={!text.trim() || state === 'busy'}>{state === 'busy' ? 'Reading…' : 'Build'}</button>
       </div>
-      {state === 'none' && <p className="hint">Não achei um ambiente ou material nessa frase. Escolha um dos cartões acima.</p>}
-      {state === 'error' && <p className="hint bad">Não consegui ler a frase agora. Escolha um dos cartões acima.</p>}
+      {state === 'none' && <p className="hint">I could not find an environment or material in that sentence. Pick one of the cards above.</p>}
+      {state === 'error' && <p className="hint bad">I could not read the sentence right now. Pick one of the cards above.</p>}
     </form>
   )
 }
@@ -52,9 +52,9 @@ export function HabitatStep() {
   return (
     <div className="step">
       <header className="step-head">
-        <span className="eyebrow">Passo 1 de 4</span>
-        <h1>Onde a tripulação vai morar?</h1>
-        <p>Cada ambiente tem seu ar e sua gravidade. É isso que decide como o fogo se comporta.</p>
+        <span className="eyebrow">Step 1 of 4</span>
+        <h1>Where will the crew live?</h1>
+        <p>Each environment has its own air and gravity. That is what decides how fire behaves.</p>
       </header>
       <div className="options">
         {meta?.habitats.map((h) => (
@@ -67,13 +67,13 @@ export function HabitatStep() {
       </div>
       {meta?.habitats.find((h) => h.id === scenario.habitat) && <p className="hint">{meta.habitats.find((h) => h.id === scenario.habitat)!.note}</p>}
       <Describe />
-      <button className="link" onClick={() => setCustom((c) => !c)} aria-expanded={custom}>{custom ? 'Fechar o ajuste fino' : 'Ajustar o ar, a gravidade e o vento à mão'}</button>
+      <button className="link" onClick={() => setCustom((c) => !c)} aria-expanded={custom}>{custom ? 'Close fine-tuning' : 'Set the air, gravity and airflow by hand'}</button>
       {custom && (
         <div className="sliders">
-          <Slider id="o2" label="Oxigênio" value={scenario.o2} min={0.1} max={1} step={0.005} fmt={(v) => pct(v, 1)} onChange={(v) => setScenario({ o2: v }, undefined, true)} />
-          <Slider id="p" label="Pressão" value={scenario.pressure_atm} min={0.25} max={3} step={0.005} fmt={(v) => `${psi(v)} (${nf(v, 2)} atm)`} onChange={(v) => setScenario({ pressure_atm: v }, undefined, true)} />
-          <Slider id="g" label="Gravidade" value={scenario.gravity} min={0} max={1} step={0.005} fmt={(v) => gLabel(v)} onChange={(v) => setScenario({ gravity: v }, undefined, true)} />
-          <Slider id="w" label="Vento da ventilação" value={wind} min={0} max={WIND_MAX} step={1} fmt={(v) => (v > 0 ? `${nf(v, 0)} cm/s` : 'cortada')} onChange={setWind} />
+          <Slider id="o2" label="Oxygen" value={scenario.o2} min={0.1} max={1} step={0.005} fmt={(v) => pct(v, 1)} onChange={(v) => setScenario({ o2: v }, undefined, true)} />
+          <Slider id="p" label="Pressure" value={scenario.pressure_atm} min={0.25} max={3} step={0.005} fmt={(v) => `${psi(v)} (${nf(v, 2)} atm)`} onChange={(v) => setScenario({ pressure_atm: v }, undefined, true)} />
+          <Slider id="g" label="Gravity" value={scenario.gravity} min={0} max={1} step={0.005} fmt={(v) => gLabel(v)} onChange={(v) => setScenario({ gravity: v }, undefined, true)} />
+          <Slider id="w" label="Ventilation airflow" value={wind} min={0} max={WIND_MAX} step={1} fmt={(v) => (v > 0 ? `${nf(v, 0)} cm/s` : 'off')} onChange={setWind} />
         </div>
       )}
     </div>

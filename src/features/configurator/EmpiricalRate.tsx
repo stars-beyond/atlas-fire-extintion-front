@@ -7,39 +7,39 @@ import type { Verdict } from '../../types'
 
 type E = NonNullable<Verdict['empirical']>
 const PARTS: [keyof E, string, string][] = [
-  ['burned', 'queimaram até o fim', 'var(--g1)'], ['extinguished', 'acenderam e apagaram sozinhos', 'var(--g0)'],
-  ['disrupted', 'gota estourou', 'var(--gas)'], ['no_ignition', 'não acenderam', 'var(--fumaca)'],
+  ['burned', 'burned to completion', 'var(--g1)'], ['extinguished', 'ignited and went out on their own', 'var(--g0)'],
+  ['disrupted', 'droplet burst', 'var(--gas)'], ['no_ignition', 'did not ignite', 'var(--fumaca)'],
 ]
 
 export function EmpiricalRate({ verdict, compact }: { verdict: Verdict; compact?: boolean }) {
   const e = verdict.empirical
   if (!e) return null
   return (
-    <section className="emp" aria-label="O que aconteceu nos testes reais desta condição">
-      <span className="eyebrow">Nos testes reais desta condição</span>
+    <section className="emp" aria-label="What happened in real tests at this condition">
+      <span className="eyebrow">In real tests at this condition</span>
       {e.known > 0 ? (
         <>
           <div className="emp-head">
-            <b>{e.burned} de {e.known}</b>
-            <span>{e.burned === 1 ? 'queimou até o fim' : 'queimaram até o fim'}</span>
+            <b>{e.burned} of {e.known}</b>
+            <span>burned to completion</span>
           </div>
           <div className="emp-bar" role="img" aria-label={e.headline}>
             {PARTS.map(([k, label, color]) => (e[k] as number) > 0 && (<i key={k} style={{ flex: e[k] as number, background: color }} title={`${e[k]} ${label}`} />))}
           </div>
           <ul className="emp-legend">
             {PARTS.map(([k, label, color]) => (e[k] as number) > 0 && (<li key={k}><i style={{ background: color }} />{nf(e[k] as number)} {label}</li>))}
-            {e.unknown > 0 && <li><i className="hatch" />{nf(e.unknown)} sem desfecho tabelado</li>}
+            {e.unknown > 0 && <li><i className="hatch" />{nf(e.unknown)} with no tabulated outcome</li>}
           </ul>
         </>
       ) : <p className="lead">{e.headline}</p>}
       {!compact && e.by_investigation.length > 1 && (
         <ul className="emp-by">
           {e.by_investigation.map((b) => (
-            <li key={b.id}><b>{b.name}</b><span>{b.known > 0 ? `${b.burned} de ${b.known} até o fim` : `${b.total} sem desfecho tabelado`}</span></li>
+            <li key={b.id}><b>{b.name}</b><span>{b.known > 0 ? `${b.burned} of ${b.known} to completion` : `${b.total} with no tabulated outcome`}</span></li>
           ))}
         </ul>
       )}
-      <p className="hint">Contagem de ensaios reais, não probabilidade: junta amostras, tamanhos e montagens diferentes.</p>
+      <p className="hint">A count of real tests, not a probability: it pools different samples, sizes and setups.</p>
     </section>
   )
 }

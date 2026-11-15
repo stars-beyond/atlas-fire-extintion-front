@@ -17,6 +17,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { CSS2DObject, CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer.js'
 import { fit, loadAssets, type Assets } from './assets'
 import { labCam } from './labCam'
+import { LOCALE } from '../lib/format'
 import { C, RIG, domeBase, earth, flatSpot, glowTexture, ground, label, marsSky, mesh, panelsField, rig, roomBody, roverBody, stars, stationBody, std, type Body } from './parts'
 
 export type EnvKind = 'orbita' | 'lua' | 'rover' | 'marte' | 'traje' | 'terra'
@@ -35,7 +36,7 @@ export interface SceneCallbacks { ready?(): void; pick?(kind: EnvKind): void }
 
 type WorldId = 'lua' | 'marte' | 'orbita' | 'terra'
 const WORLD_OF: Record<EnvKind, WorldId> = { lua: 'lua', rover: 'lua', marte: 'marte', orbita: 'orbita', traje: 'orbita', terra: 'terra' }
-const NAME: Record<EnvKind, string> = { orbita: 'Estação espacial', lua: 'Base lunar', rover: 'Rover pressurizado', marte: 'Base em Marte', traje: 'Traje espacial', terra: 'Sala na Terra' }
+const NAME: Record<EnvKind, string> = { orbita: 'Space station', lua: 'Lunar base', rover: 'Pressurized rover', marte: 'Mars base', traje: 'Spacesuit', terra: 'Room on Earth' }
 const LAB_W = 12   // comprimento do duto do simulador, em cm
 
 interface Spot {
@@ -81,8 +82,8 @@ export function createHabitatEngine(host: HTMLDivElement, labelHost: HTMLDivElem
   const shade = new THREE.Sprite(new THREE.SpriteMaterial({ map: glow, color: 0x000000, transparent: true, opacity: 0, depthWrite: false })); shade.scale.setScalar(3.4); shade.renderOrder = 2; cell.add(shade)
   const flameLight = new THREE.PointLight(0x7fb8ff, 0, 9, 1.8); cell.add(flameLight)
   const arrow = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(-RIG.W / 2 - 1.15, 0, 0), 0.8, 0xe9eff8, 0.24, 0.14); cell.add(arrow)
-  const windLabel = label('ar: 10 cm/s', ''); windLabel.position.set(-RIG.W / 2 - 0.75, 0.32, 0); cell.add(windLabel)
-  const rigLabel = label('bancada de ensaio', 'habl on'); rigLabel.position.set(0, RIG.H / 2, 0); rigLabel.center.set(0.5, 1.4); cell.add(rigLabel)
+  const windLabel = label('air: 10 cm/s', ''); windLabel.position.set(-RIG.W / 2 - 0.75, 0.32, 0); cell.add(windLabel)
+  const rigLabel = label('test rig', 'habl on'); rigLabel.position.set(0, RIG.H / 2, 0); rigLabel.center.set(0.5, 1.4); cell.add(rigLabel)
   // farol: marca de longe onde a chama fica, mesmo através da casca do habitat
   const beacon = new THREE.Sprite(new THREE.SpriteMaterial({ map: glow, blending: THREE.AdditiveBlending, depthWrite: false, depthTest: false, transparent: true, sizeAttenuation: false }))
   beacon.renderOrder = 5; scene.add(beacon)
@@ -126,7 +127,7 @@ export function createHabitatEngine(host: HTMLDivElement, labelHost: HTMLDivElem
       const terrain = ground((mars && assets!.model.terrain_mars) || assets!.model.terrain_moon, soil); group.add(terrain.group)
       const h = terrain.height
       if (mars && assets!.model.terrain_mars) credits.push(cr.terrain_mars!)
-      else if (cr.terrain_moon) credits.push(cr.terrain_moon + (mars ? ', recolorido para fazer as vezes de Marte' : ''))
+      else if (cr.terrain_moon) credits.push(cr.terrain_moon + (mars ? ', recolored to stand in for Mars' : ''))
       const b = flatSpot(h, 0, 0, 54, 12), by = h(b.x, b.z), at = new THREE.Vector3(b.x, by, b.z)
       const base = custom('habitat', 22, 12) ?? domeBase(9, soil)
       if (assets!.model.habitat) credits.push(cr.habitat!)
@@ -319,7 +320,7 @@ export function createHabitatEngine(host: HTMLDivElement, labelHost: HTMLDivElem
     },
     enter(on) { if (inside === on) return; inside = on; controls.autoRotate = false; aim(false); kick() },
     setFlame(m, sim) { mode = m; if (sim) simState = sim; kick(30) },
-    setWind(w) { windOn = w > 0; windLabel.element.textContent = windOn ? `ar: ${w.toLocaleString('pt-BR', { maximumFractionDigits: 1 })} cm/s` : 'ar parado'; kick(3) },
+    setWind(w) { windOn = w > 0; windLabel.element.textContent = windOn ? `air: ${w.toLocaleString(LOCALE, { maximumFractionDigits: 1 })} cm/s` : 'still air'; kick(3) },
     credits() { return world ? [...new Set(world.credits)] : [] },
     dispose() {
       disposed = true; cancelAnimationFrame(raf); ro.disconnect(); controls.dispose()

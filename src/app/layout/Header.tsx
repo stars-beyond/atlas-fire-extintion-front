@@ -5,9 +5,9 @@ export function Header() {
   const { step, setStep, view, setView, ignited } = useAtlas()
   return (
     <header className="top">
-      <button className="brand" onClick={() => setView('drive')}><span className="brand-mark" />Atlas de Extinção</button>
+      <button className="brand" onClick={() => setView('drive')}><span className="brand-mark" />Extinction Atlas</button>
       {view === 'drive' ? (
-        <ol className="stepper" aria-label="Etapas do test drive">
+        <ol className="stepper" aria-label="Test drive steps">
           {STEPS.map((s, i) => (
             <li key={s}>
               <button aria-current={step === i ? 'step' : undefined} className={i < step ? 'done' : ''} onClick={() => setStep(i)} disabled={i === 3 && !ignited}>
@@ -16,11 +16,11 @@ export function Header() {
             </li>
           ))}
         </ol>
-      ) : <button className="ghost" onClick={() => setView('drive')}>← Voltar ao test drive</button>}
-      <nav className="more" aria-label="Explorar o acervo">
-        <button aria-pressed={view === 'achados'} onClick={() => setView('achados')}>Achados</button>
-        <button aria-pressed={view === 'investigacoes'} onClick={() => setView('investigacoes')}>Investigações</button>
-        <button aria-pressed={view === 'proximo'} onClick={() => setView('proximo')}>Próximo fogo</button>
+      ) : <button className="ghost" onClick={() => setView('drive')}>← Back to the test drive</button>}
+      <nav className="more" aria-label="Explore the archive">
+        <button aria-pressed={view === 'achados'} onClick={() => setView('achados')}>Findings</button>
+        <button aria-pressed={view === 'investigacoes'} onClick={() => setView('investigacoes')}>Investigations</button>
+        <button aria-pressed={view === 'proximo'} onClick={() => setView('proximo')}>Next fire</button>
       </nav>
     </header>
   )

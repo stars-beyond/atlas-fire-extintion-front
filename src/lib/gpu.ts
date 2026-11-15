@@ -19,7 +19,7 @@ function probe(): string | null {
   try {
     const force = new URLSearchParams(location.search).get('lab')
     if (force === 'on') return null
-    if (force === 'off') return 'Modo leve: o simulador 3D foi desligado pelo endereço (?lab=off).'
+    if (force === 'off') return 'Light mode: the 3D simulator was turned off by the URL (?lab=off).'
   } catch { /* sem location */ }
 
   const canvas = document.createElement('canvas')
@@ -28,14 +28,14 @@ function probe(): string | null {
   if (!gl) {
     const any = document.createElement('canvas').getContext('webgl2')
     return any
-      ? 'Modo leve: este aparelho não tem aceleração gráfica para o simulador 3D, então a chama é ilustrada.'
-      : 'Modo leve: este navegador não oferece WebGL2, então a chama é ilustrada.'
+      ? 'Light mode: this device has no graphics acceleration for the 3D simulator, so the flame is illustrated.'
+      : 'Light mode: this browser does not support WebGL2, so the flame is illustrated.'
   }
   try {
-    if (!gl.getExtension('EXT_color_buffer_float')) return 'Modo leve: a placa de vídeo não calcula em ponto flutuante, então a chama é ilustrada.'
+    if (!gl.getExtension('EXT_color_buffer_float')) return 'Light mode: the graphics card cannot compute in floating point, so the flame is illustrated.'
     const dbg = gl.getExtension('WEBGL_debug_renderer_info')
     const name = String(dbg ? gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER))
-    if (SOFTWARE.test(name)) return 'Modo leve: o navegador está desenhando sem placa de vídeo, então a chama é ilustrada.'
+    if (SOFTWARE.test(name)) return 'Light mode: the browser is rendering without a graphics card, so the flame is illustrated.'
     return null
   } finally {
     gl.getExtension('WEBGL_lose_context')?.loseContext()

@@ -14,7 +14,7 @@ export function LabStage({ mat }: { mat: number }) {
     const h = (e: MessageEvent) => {
       if (e.source !== ref.current?.contentWindow || e.origin !== location.origin) return
       const d = e.data
-      if (d?.type === 'atlas:lab') { if (d.status === 'ready') setReady(true); else setLabOff(d.message || 'O simulador 3D não abriu neste navegador.') }
+      if (d?.type === 'atlas:lab') { if (d.status === 'ready') setReady(true); else setLabOff(d.message || 'The 3D simulator did not open in this browser.') }
       else if (d?.type === 'atlas:metrics') setLab(d)
     }
     window.addEventListener('message', h)
@@ -49,8 +49,8 @@ export function LabStage({ mat }: { mat: number }) {
   }, [ready, scenario.o2, scenario.pressure_atm, scenario.gravity, mat, lit, agent, conc, wind, igniteSeq])
   return (
     <>
-      <iframe ref={ref} className="lab-frame embed" src={`/lab3d/stage.html?embed=1&api=${encodeURIComponent(API_BASE)}`} title="Chama simulada em 3D" tabIndex={-1} />
-      {!ready && <p className="lab-wait low">Preparando o simulador…</p>}
+      <iframe ref={ref} className="lab-frame embed" src={`/lab3d/stage.html?embed=1&api=${encodeURIComponent(API_BASE)}`} title="Simulated 3D flame" tabIndex={-1} />
+      {!ready && <p className="lab-wait low">Loading the simulator…</p>}
     </>
   )
 }

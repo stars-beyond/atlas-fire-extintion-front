@@ -43,10 +43,10 @@ export function HabitatStage({ near, flame, onCredits }: { near: boolean; flame:
 
   return (
     <div className="scene-wrap">
-      <div ref={host} className="scene-host" role="img" aria-label="Cenário 3D ilustrativo do ambiente escolhido, com a bancada de ensaio dentro dele" />
+      <div ref={host} className="scene-host" role="img" aria-label="Illustrative 3D scene of the chosen environment, with the test rig inside it" />
       <div ref={labels} className="scene-labels" />
-      {!ready && !failed && <p className="lab-wait">Montando o cenário…</p>}
-      {failed && <p className="lab-wait">O cenário 3D não abriu neste navegador.</p>}
+      {!ready && !failed && <p className="lab-wait">Building the scene…</p>}
+      {failed && <p className="lab-wait">The 3D scene did not open in this browser.</p>}
     </div>
   )
 }

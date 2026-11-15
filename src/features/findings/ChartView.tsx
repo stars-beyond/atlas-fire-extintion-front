@@ -1,14 +1,15 @@
 // Desenho dos gráficos do construtor, portado do COSMOEX FLAME (components/cf/ChartView.tsx).
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Scatter, ScatterChart, Tooltip, XAxis, YAxis, ZAxis } from 'recharts'
+import { LOCALE } from '../../lib/format'
 import type { BuiltChart } from '../../types'
 
 const COLORS = ['var(--g0)', 'var(--g1)', 'var(--gota)', 'var(--solido)', 'var(--gas)', 'var(--incognita)', 'var(--medido)', 'var(--dim)']
 const axis = { stroke: 'var(--faint)', fontSize: 11, fontFamily: 'var(--mono)' }
 const tip = { contentStyle: { background: 'var(--ink-2)', border: '1px solid var(--line-2)', borderRadius: 8, fontSize: 12.5, color: 'var(--text)' }, itemStyle: { color: 'var(--text)' } }
-const num = (v: number) => v.toLocaleString('pt-BR', { maximumFractionDigits: 3 })
+const num = (v: number) => v.toLocaleString(LOCALE, { maximumFractionDigits: 3 })
 
 export function ChartView({ chart, xLabel, yLabel, height = 340, onPick }: { chart: BuiltChart; xLabel: string; yLabel: string; height?: number; onPick?: (id: string) => void }) {
-  if (chart.used === 0) return <p className="empty">Sem valores numéricos para esta seleção.</p>
+  if (chart.used === 0) return <p className="empty">No numeric values for this selection.</p>
   return (
     <div style={{ height, width: '100%' }}>
       <ResponsiveContainer>
@@ -30,7 +31,7 @@ export function ChartView({ chart, xLabel, yLabel, height = 340, onPick }: { cha
             <XAxis dataKey="name" {...axis} angle={-25} textAnchor="end" interval={0} height={64} />
             <YAxis {...axis} tickFormatter={num} />
             <Tooltip {...tip} cursor={{ fill: 'var(--ink-3)' }} formatter={(v: number) => num(v)} />
-            <Bar dataKey={chart.kind === 'bar' ? 'mean' : 'count'} name={chart.kind === 'bar' ? `Média · ${yLabel}` : 'Contagem'} fill={chart.kind === 'bar' ? 'var(--g0)' : 'var(--gota)'} radius={[4, 4, 0, 0]} />
+            <Bar dataKey={chart.kind === 'bar' ? 'mean' : 'count'} name={chart.kind === 'bar' ? `Mean · ${yLabel}` : 'Count'} fill={chart.kind === 'bar' ? 'var(--g0)' : 'var(--gota)'} radius={[4, 4, 0, 0]} />
           </BarChart>
         )}
       </ResponsiveContainer>

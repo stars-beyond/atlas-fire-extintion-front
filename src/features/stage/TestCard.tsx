@@ -14,17 +14,17 @@ export function TestCard() {
   const mx = d.metrics || {}
   const fromReport = !!mx.outcome_source && !!mx.end
   const result = fromReport && t.outcome_raw
-    ? t.outcome_raw.charAt(0).toUpperCase() + t.outcome_raw.slice(1) + (mx.limit_flow_cm_s != null ? `, com vento de ${mx.limit_flow_cm_s < 2 && mx.end === 'quench' ? 'menos de 2' : nf(mx.limit_flow_cm_s, mx.limit_flow_cm_s < 10 ? 1 : 0)} cm/s` : '')
+    ? t.outcome_raw.charAt(0).toUpperCase() + t.outcome_raw.slice(1) + (mx.limit_flow_cm_s != null ? `, at an airflow of ${mx.limit_flow_cm_s < 2 && mx.end === 'quench' ? 'under 2' :nf(mx.limit_flow_cm_s, mx.limit_flow_cm_s < 10 ? 1 : 0)} cm/s` : '')
     : `${OUTCOME[t.outcome]}${t.outcome_raw ? ` (${t.outcome_raw})` : ''}`
   return (
-    <aside className="test-card" aria-label="Teste selecionado">
-      <header><b>{d.investigation} · {t.label}</b><button className="x" onClick={() => selectTest(null)} aria-label="Fechar">×</button></header>
+    <aside className="test-card" aria-label="Selected test">
+      <header><b>{d.investigation} · {t.label}</b><button className="x" onClick={() => selectTest(null)} aria-label="Close">×</button></header>
       <dl>
-        <dt>O que queimou</dt><dd>{t.fuel || FAMILY[t.family]}</dd>
-        <dt>Atmosfera</dt><dd>{t.o2 != null ? pct(t.o2, 1) : '–'} de O₂ · {t.pressure_atm != null ? psi(t.pressure_atm) : 'pressão não tabelada'} · {gLabel(t.gravity)}</dd>
-        <dt>Resultado</dt><dd>{result}</dd>
-        {fromReport && mx.comments && (<><dt>O que o relatório da NASA diz</dt><dd className="quote" lang="en">“{mx.comments}”</dd></>)}
-        <dt>De onde vem</dt><dd className="mono">{fromReport ? `${mx.outcome_source} · ` : ''}{d.source}</dd>
+        <dt>What burned</dt><dd>{t.fuel || FAMILY[t.family]}</dd>
+        <dt>Atmosphere</dt><dd>{t.o2 != null ? pct(t.o2, 1) : '–'} O₂ · {t.pressure_atm != null ? psi(t.pressure_atm) : 'pressure not tabulated'} · {gLabel(t.gravity)}</dd>
+        <dt>Outcome</dt><dd>{result}</dd>
+        {fromReport && mx.comments && (<><dt>What the NASA report says</dt><dd className="quote" lang="en">“{mx.comments}”</dd></>)}
+        <dt>Source</dt><dd className="mono">{fromReport ? `${mx.outcome_source} · ` : ''}{d.source}</dd>
       </dl>
     </aside>
   )

@@ -6,14 +6,14 @@ import { useAtlas } from '../../state'
 import type { Ranked } from '../../types'
 
 const PARTS: [keyof Ranked['parts'], string][] = [
-  ['proximidade', 'Perto do seu cenário'], ['dados', 'Dados tabelados'], ['relevancia', 'Relevância'], ['enunciado', 'Citada no desafio'],
+  ['proximidade', 'Close to your scenario'], ['dados', 'Tabulated data'], ['relevancia', 'Relevance'], ['enunciado', 'Cited in the challenge'],
 ]
 const cap = (t: string) => t.charAt(0).toUpperCase() + t.slice(1)
 
 export function Studies({ limit = 4 }: { limit?: number }) {
   const { ranking, selectInv, setView } = useAtlas()
   const list = ranking.slice(0, limit)
-  if (!list.length) return <p className="hint">Procurando as investigações…</p>
+  if (!list.length) return <p className="hint">Finding the investigations…</p>
   return (
     <ol className="studies">
       {list.map((r, i) => {
@@ -21,7 +21,7 @@ export function Studies({ limit = 4 }: { limit?: number }) {
         const [near, ...why] = r.reason.replace(/\.$/, '').split(';').map((t) => t.trim()).filter(Boolean)
         return (
           <li key={r.id}>
-            <button className="study" onClick={() => { selectInv(r.id); setView('investigacoes') }} aria-label={`${r.name}: abrir a investigação`}>
+            <button className="study" onClick={() => { selectInv(r.id); setView('investigacoes') }} aria-label={`${r.name}: open the investigation`}>
               <span className="study-rank">{i + 1}</span>
               <span className="study-head">
                 <b>{r.name}</b>

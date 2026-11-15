@@ -15,14 +15,14 @@ const Z = (p: number) => D / 2 - ((Math.log(Math.min(P1, Math.max(P0, p))) - Mat
 
 const css = (name: string) => getComputedStyle(document.documentElement).getPropertyValue(name).trim()
 const FLOORS = [
-  { g: 0, label: '0 g · órbita', v: '--g0', empty: false },
-  { g: 0.165, label: '0,17 g · Lua', v: '--lua', empty: true },
-  { g: 0.378, label: '0,38 g · Marte', v: '--marte', empty: true },
-  { g: 1, label: '1 g · Terra', v: '--g1', empty: false },
+  { g: 0, label: '0 g · orbit', v: '--g0', empty: false },
+  { g: 0.165, label: '0.17 g · Moon', v: '--lua', empty: true },
+  { g: 0.378, label: '0.38 g · Mars', v: '--marte', empty: true },
+  { g: 1, label: '1 g · Earth', v: '--g1', empty: false },
 ]
 export const LEGENDS: Record<ColorMode, [string, string][]> = {
-  familia: [['Sólidos', '--solido'], ['Gotas', '--gota'], ['Chamas gasosas', '--gas']],
-  desfecho: [['Queimou', '--g1'], ['Apagou', '--g0'], ['Gota estourou', '--gas'], ['Não acendeu', '--fumaca'], ['Não tabelado', '--ink-4']],
+  familia: [['Solids', '--solido'], ['Droplets', '--gota'], ['Gas flames', '--gas']],
+  desfecho: [['Burned', '--g1'], ['Went out', '--g0'], ['Droplet burst', '--gas'], ['Did not ignite', '--fumaca'], ['Not tabulated', '--ink-4']],
   gravidade: [['0 g', '--g0'], ['1 g', '--g1']],
 }
 const TIER_VAR: Record<Tier, string> = { medido: '--medido', delimitado: '--delimitado', parcial: '--parcial', sem_evidencia: '--incognita' }
@@ -85,7 +85,7 @@ export function createEngine(host: HTMLDivElement, labelHost: HTMLDivElement, cb
 
   // ----- andares, grade e rótulos
   const o2Ticks = [0.1, 0.21, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
-  const pTicks: [number, string][] = [[0.2925, '4,3 psi'], [1, '14,7 psi'], [5, '5 atm']]
+  const pTicks: [number, string][] = [[0.2925, '4.3 psi'], [1, '14.7 psi'], [5, '5 atm']]
   for (const f of FLOORS) {
     const col = new THREE.Color(css(f.v))
     const pts: number[] = []
@@ -101,7 +101,7 @@ export function createEngine(host: HTMLDivElement, labelHost: HTMLDivElement, cb
       const plane = new THREE.Mesh(new THREE.PlaneGeometry(W, D), new THREE.MeshBasicMaterial({
         map: hatchTexture(css('--incognita')), transparent: true, opacity: 0.16, side: THREE.DoubleSide, depthWrite: false }))
       plane.rotation.x = -Math.PI / 2; grp.add(plane)
-      const v = label('nenhum teste da NASA aqui', 'void'); v.position.set(2.4, 0.02, -D / 2 + 0.6); grp.add(v)
+      const v = label('no NASA tests here', 'void'); v.position.set(2.4, 0.02, -D / 2 + 0.6); grp.add(v)
       // faixa do enunciado: 30% de O₂ ou mais, 10,2 psi ou menos (até o traje, 4,3 psi)
       const x0 = X(0.3), x1 = X(1), z0 = Z(0.694), z1 = Z(0.2925)
       const band = new THREE.Mesh(new THREE.PlaneGeometry(x1 - x0, Math.abs(z1 - z0)), new THREE.MeshBasicMaterial({
@@ -111,15 +111,15 @@ export function createEngine(host: HTMLDivElement, labelHost: HTMLDivElement, cb
         new THREE.Vector3(x0, 0.01, z0), new THREE.Vector3(x1, 0.01, z0), new THREE.Vector3(x1, 0.01, z1), new THREE.Vector3(x0, 0.01, z1)]),
         new THREE.LineBasicMaterial({ color: css('--act'), transparent: true, opacity: 0.6 }))
       grp.add(out)
-      if (f.g < 0.2) { const b = label('ar previsto para a Lua e Marte', 'band'); b.position.set((x0 + x1) / 2, 0.02, z1 + 0.2); grp.add(b) }
+      if (f.g < 0.2) { const b = label('planned Moon and Mars atmospheres', 'band'); b.position.set((x0 + x1) / 2, 0.02, z1 + 0.2); grp.add(b) }
     }
     const fl = label(f.label, 'floor'); (fl.element as HTMLElement).style.color = css(f.v); fl.position.set(-W / 2 - 0.9, 0, -D / 2); grp.add(fl)
     scene.add(grp)
   }
   for (const o of [0.21, 0.4, 0.6, 0.8, 1]) { const l = label(pct(o), ''); l.position.set(X(o), 0, D / 2 + 0.35); scene.add(l) }
-  const ax = label('oxigênio', 'axis'); ax.position.set(X(0.02), 0, D / 2 + 0.35); scene.add(ax)
+  const ax = label('oxygen', 'axis'); ax.position.set(X(0.02), 0, D / 2 + 0.35); scene.add(ax)
   for (const [p, t] of pTicks) { const l = label(t, ''); l.position.set(W / 2 + 0.55, 0, Z(p)); scene.add(l) }
-  const az = label('pressão', 'axis'); az.position.set(W / 2 + 0.55, 0, Z(P1) - 0.5); scene.add(az)
+  const az = label('pressure', 'axis'); az.position.set(W / 2 + 0.55, 0, Z(P1) - 0.5); scene.add(az)
   // pilares nos cantos: ligam os andares
   const pil: number[] = []
   for (const [x, z] of [[-W / 2, -D / 2], [W / 2, -D / 2], [W / 2, D / 2], [-W / 2, D / 2]]) pil.push(x, 0, z, x, H, z)
@@ -150,7 +150,7 @@ export function createEngine(host: HTMLDivElement, labelHost: HTMLDivElement, cb
   const box = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(1, 1, 1)), new THREE.LineBasicMaterial({ color: css('--incognita') }))
   probe.add(flame, glow, box)
   // rótulo do cenário: só aparece quando ele não é um dos ambientes prontos (esses já levam o próprio nome)
-  const probeLabel = label('seu cenário', 'habl on'); probeLabel.center.set(0.5, 1.9); probeLabel.visible = false; probe.add(probeLabel)
+  const probeLabel = label('your scenario', 'habl on'); probeLabel.center.set(0.5, 1.9); probeLabel.visible = false; probe.add(probeLabel)
   const plumb = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, H, 0)]),
     new THREE.LineDashedMaterial({ color: css('--text'), dashSize: 0.12, gapSize: 0.1, transparent: true, opacity: 0.45 }))
   plumb.computeLineDistances(); scene.add(plumb)
@@ -324,7 +324,7 @@ export function createEngine(host: HTMLDivElement, labelHost: HTMLDivElement, cb
         const m = new THREE.Mesh(new THREE.RingGeometry(0.2, 0.27, 28), new THREE.MeshBasicMaterial({ color: css('--incognita'), side: THREE.DoubleSide, transparent: true, opacity: i === selected ? 1 : 0.7 }))
         m.rotation.x = -Math.PI / 2; m.position.copy(p)
         const l = label(String(i + 1), 'gap' + (i === selected ? ' on' : '')); l.center.set(0.5, 0.5); l.position.set(0, 0, 0.02)
-        l.element.title = 'Ensaio que falta'; l.element.addEventListener('click', () => cb.gap?.(i))
+        l.element.title = 'Missing test'; l.element.addEventListener('click', () => cb.gap?.(i))
         m.add(l); gapGroup.add(m)
       })
     },

@@ -16,14 +16,14 @@ export function App() {
   if (loadError) {
     return (
       <div className="boot">
-        <h1>O Atlas não conseguiu abrir o acervo</h1>
+        <h1>The Atlas could not open the archive</h1>
         <p>{loadError}</p>
-        <p>Confira se os serviços estão no ar com <span className="mono">docker compose ps</span>. Na primeira subida, a carga dos dados leva alguns minutos.</p>
-        <button className="cta" onClick={() => location.reload()}>Tentar de novo</button>
+        <p>Check that the services are up with <span className="mono">docker compose ps</span>. On first start, loading the data takes a few minutes.</p>
+        <button className="cta" onClick={() => location.reload()}>Try again</button>
       </div>
     )
   }
-  if (!meta) return <div className="boot"><p>Abrindo o acervo da NASA…</p></div>
+  if (!meta) return <div className="boot"><p>Opening the NASA archive…</p></div>
   return (
     <div className={`shell${view === 'drive' ? '' : ' browsing'}`}>
       <Header />

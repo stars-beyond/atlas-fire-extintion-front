@@ -18,9 +18,9 @@ export function MaterialStep() {
   return (
     <div className="step">
       <header className="step-head">
-        <span className="eyebrow">Passo 2 de 4</span>
-        <h1>O que pode pegar fogo lá dentro?</h1>
-        <p>Tecidos e plásticos são o combustível de um incêndio real numa nave. Escolha um para testar.</p>
+        <span className="eyebrow">Step 2 of 4</span>
+        <h1>What could catch fire in there?</h1>
+        <p>Fabrics and plastics are the fuel of a real spacecraft fire. Pick one to test.</p>
       </header>
       <div className="options">
         {MATERIALS.map((m) => {
@@ -30,7 +30,7 @@ export function MaterialStep() {
               <span className="swatch-lg" style={{ background: m.tint }} />
               <span className="option-name">{m.name}</span>
               <span className="option-sub">{m.sub}</span>
-              <span className="option-spec">{nf(n)} {n === 1 ? 'teste da NASA' : 'testes da NASA'}</span>
+              <span className="option-spec">{nf(n)} NASA {n === 1 ? 'test' : 'tests'}</span>
             </button>
           )
         })}

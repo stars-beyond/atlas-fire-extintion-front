@@ -4,7 +4,7 @@
 import type { ChartConfig, ChartType, Dataset } from '../../types'
 
 export type { BuiltChart, ChartConfig, ChartType } from '../../types'
-export const TYPE_LABEL: Record<ChartType, string> = { scatter: 'Dispersão', bar: 'Barras (média por grupo)', histogram: 'Histograma' }
+export const TYPE_LABEL: Record<ChartType, string> = { scatter: 'Scatter', bar: 'Bars (mean per group)', histogram: 'Histogram' }
 
 export function defaultConfig(def: Dataset): ChartConfig {
   const has = (k: string) => def.numeric.some((v) => v.key === k)

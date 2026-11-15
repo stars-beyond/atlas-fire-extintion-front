@@ -67,7 +67,7 @@ export function AtlasProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     Promise.all([api.meta(), api.investigations(), api.tests()])
       .then(([m, i, t]) => { setMeta(m); setInvs(i); setTests(t) })
-      .catch((e) => setLoadError(e.message || 'Não foi possível falar com a API do Atlas.'))
+      .catch((e) => setLoadError(e.message || 'Could not reach the Atlas API.'))
   }, [])
 
   const setScenario = useCallback((patch: Partial<Scenario>, habitat?: string, keep?: boolean) => {

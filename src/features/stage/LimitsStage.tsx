@@ -12,18 +12,21 @@ import type { Assessment, FlamPoint, FlamTest, Flammability } from '../../types'
 type State = FlamPoint['state']
 const BURNED: State[] = ['queimou', 'vento_nao_apagou']
 const WHAT: Record<State, string> = {
-  queimou: 'Queimou', vento_nao_apagou: 'Queimou, e o vento não apagou', apagou_pouco_ar: 'Apagou por falta de ar',
-  apagou_vento: 'Apagou soprada pelo vento', apagou_sozinha: 'Apagou sozinha', nao_sustentou: 'Não se sustentou',
+  queimou: 'Burned', vento_nao_apagou: 'Burned and was not blown out', apagou_pouco_ar: 'Went out for lack of air',
+  apagou_vento: 'Blown out by the airflow', apagou_sozinha: 'Went out on its own', nao_sustentou: 'Did not sustain itself',
 }
 const FORM_SHORT: Record<string, string> = {
-  'bastão de acrílico': 'Bastão de acrílico', 'tecido de algodão (SIBAL)': 'Tecido de algodão', 'filme fino de acrílico': 'Filme fino de acrílico',
-  'placa de acrílico': 'Placa de acrílico', 'tecido Nomex': 'Tecido Nomex', 'esfera de acrílico': 'Esfera de acrílico', 'vela de cera': 'Vela de cera',
+  'bastão de acrílico': 'Acrylic rod', 'tecido de algodão (SIBAL)': 'Cotton fabric', 'filme fino de acrílico': 'Thin acrylic film',
+  'placa de acrílico': 'Acrylic slab', 'tecido Nomex': 'Nomex fabric', 'esfera de acrílico': 'Acrylic sphere', 'vela de cera': 'Wax candle',
 }
+const nTests = (n: number) => `${n} ${n === 1 ? 'test' : 'tests'}`
+// geometry values come from the API in Portuguese (the ML pipeline uses them as keys); shown in English
+const GEOMETRY: Record<string, string> = { 'contra o vento': 'opposed flow', 'a favor do vento': 'concurrent flow' }
 const FORM_FOR: Record<string, string> = { pmma: 'bastão de acrílico', sibal: 'tecido de algodão (SIBAL)', nomex: 'tecido Nomex' }
 const Y0 = 0.3, Y1 = 60          // faixa do eixo do vento, em cm/s (escala logarítmica)
 const X0 = 11, X1 = 36           // faixa do eixo do oxigênio quando há curva, em %
 const STATUS: Record<Assessment['status'], { color: string; text: string }> = {
-  queima: { color: '--g1', text: 'A chama se sustenta' }, no_limite: { color: '--parcial', text: 'A chama está no limite' }, nao_sustenta: { color: '--g0', text: 'A chama apaga' },
+  queima: { color: '--g1', text: 'The flame keeps burning' }, no_limite: { color: '--parcial', text: 'The flame is at the limit' }, nao_sustenta: { color: '--g0', text: 'The flame goes out' },
 }
 
 let cache: Promise<Flammability> | null = null
@@ -99,8 +102,8 @@ export function LimitsStage() {
   const burnZone = curve.length ? `${path(0)} L${right},${m.t} L${right},${bottom} Z` : ''
   const testedMax = bound?.tested.o2[1] ?? 0
   const partial = scenario.gravity > 0.005
-  const hab = meta?.habitats.find((x) => x.id === scenario.habitat)?.name ?? 'Seu cenário'
-  const windText = wind > 0 ? `vento de ${nf(wind, wind < 5 && wind % 1 ? 1 : 0)} cm/s` : 'ventilação cortada'
+  const hab = meta?.habitats.find((x) => x.id === scenario.habitat)?.name ?? 'Your scenario'
+  const windText = wind > 0 ? `airflow ${nf(wind, wind < 5 && wind % 1 ? 1 : 0)} cm/s` : 'ventilation off'
 
   // arrastar no gráfico leva o cenário até ali: oxigênio na horizontal, vento na vertical
   const moveTo = (ev: RPointerEvent) => {
@@ -120,18 +123,18 @@ export function LimitsStage() {
   const verdict = as && st ? (
     <button className="limits-verdict" style={{ borderColor: `var(${st.color})` }} aria-expanded={why} onClick={() => setWhy((v) => !v)}>
       <b style={{ color: `var(${st.color})` }}>{st.text}</b>
-      <span>{hab} · {nf(scO2, scO2 % 1 ? 1 : 0)}% de oxigênio · {windText}{partial ? ` · ${gLabel(scenario.gravity)}` : ''} · {as.inside_tested ? 'dentro da faixa testada' : 'estimativa'} · ver por quê</span>
+      <span>{hab} · {nf(scO2, scO2 % 1 ? 1 : 0)}% oxygen · {windText}{partial ? ` · ${gLabel(scenario.gravity)}` : ''} · {as.inside_tested ? 'within the tested band' : 'estimate'} · see why</span>
     </button>
-  ) : <span className="limits-hint">{bound ? '' : 'A NASA só publicou a curva para o bastão de acrílico. Para esta amostra, aqui estão os testes.'}</span>
+  ) : <span className="limits-hint">{bound ? '' : 'NASA only published the curve for the acrylic rod. For this sample, here are the tests.'}</span>
 
   return (
     <div ref={host} className={`limits${compact ? ' compact' : ''}`}>
-      {error && <p className="lab-wait">Não foi possível carregar os desfechos: {error}</p>}
-      {data && !data.available && <p className="lab-wait">Os desfechos ainda não foram carregados no banco.</p>}
+      {error && <p className="lab-wait">Could not load the outcomes: {error}</p>}
+      {data && !data.available && <p className="lab-wait">The outcomes have not been loaded into the database yet.</p>}
       {data?.available && (
         <>
           <svg ref={svg} className="limits-svg" width={w} height={h} role="img"
-            aria-label={`Limites de ${FORM_SHORT[active] ?? active}: ${tests.length} testes da NASA em oxigênio e vento.${as && st ? ` ${hab}: ${st.text.toLowerCase()}. ${as.detail}` : ''}`}>
+            aria-label={`Limits for ${FORM_SHORT[active] ?? active}: ${tests.length} NASA ${tests.length === 1 ? 'test' : 'tests'} by oxygen and airflow.${as && st ? ` ${hab}: ${st.text.toLowerCase()}. ${as.detail}` : ''}`}>
             <defs>
               <pattern id="limits-hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
                 <line x1="0" y1="0" x2="0" y2="8" stroke="var(--ink-0)" strokeWidth="3" strokeOpacity=".55" />
@@ -158,18 +161,18 @@ export function LimitsStage() {
             {/* faixa do ar quase parado: só o oxigênio desses testes é confiável, então eles ficam fora do gráfico */}
             <rect x={m.l} y={bottom + 3} width={plotW} height={STRIP - 4} className="limits-still" />
             <text x={m.l - 8} y={bottom + STRIP - 4} textAnchor="end">≈0</text>
-            {!compact && <text x={right - 4} y={bottom + STRIP - 5} textAnchor="end" className="limits-stilltxt">ar quase parado: o medidor não distingue</text>}
-            {xTicks.map((v) => <text key={v} x={X(v)} y={bottom + STRIP + 14} textAnchor="middle">{v}%{v === xTicks[0] ? ' de O₂' : ''}</text>)}
-            <text x={m.l} y={m.t - (compact ? 6 : 9)} className="limits-axis">vento, em cm/s</text>
+            {!compact && <text x={right - 4} y={bottom + STRIP - 5} textAnchor="end" className="limits-stilltxt">near-still air: below what the meter can resolve</text>}
+            {xTicks.map((v) => <text key={v} x={X(v)} y={bottom + STRIP + 14} textAnchor="middle">{v}%{v === xTicks[0] ? ' O₂' : ''}</text>)}
+            <text x={m.l} y={m.t - (compact ? 6 : 9)} className="limits-axis">airflow, cm/s</text>
             {bound && curve.length > 0 && (
               <g className="limits-zones">
-                <text x={m.l + 8} y={m.t + 18} className="out">APAGA · o vento sopra a chama</text>
-                <text x={m.l + 8} y={bottom - 9} className="out">APAGA · falta ar</text>
-                <text x={X(18.4)} y={Y(1.1) + 4} className="burn">QUEIMA</text>
+                <text x={m.l + 8} y={m.t + 18} className="out">GOES OUT · airflow blows the flame off</text>
+                <text x={m.l + 8} y={bottom - 9} className="out">GOES OUT · not enough air</text>
+                <text x={X(18.4)} y={Y(1.1) + 4} className="burn">BURNS</text>
                 {x1 > testedMax + 0.5 && (
                   <>
                     <line x1={X(testedMax)} x2={X(testedMax)} y1={m.t} y2={bottom} className="limits-edge" />
-                    <text x={(X(testedMax) + right) / 2} y={bottom - 7} textAnchor="middle" className="void">nenhum teste aqui</text>
+                    <text x={(X(testedMax) + right) / 2} y={bottom - 7} textAnchor="middle" className="void">no tests here</text>
                   </>
                 )}
               </g>
@@ -203,9 +206,9 @@ export function LimitsStage() {
           </svg>
           <div ref={top} className="limits-top">
             <label>
-              <span className="cap">Amostra</span>
+              <span className="cap">Sample</span>
               <select value={active} onChange={(e) => setForm(e.target.value)}>
-                {forms.map((f) => <option key={f.form} value={f.form}>{FORM_SHORT[f.form] ?? f.form} · {f.n} testes</option>)}
+                {forms.map((f) => <option key={f.form} value={f.form}>{FORM_SHORT[f.form] ?? f.form} · {nTests(f.n)}</option>)}
               </select>
             </label>
             {!compact && verdict}
@@ -214,48 +217,48 @@ export function LimitsStage() {
           {!compact && bound && (
             <div className="limits-ctl">
               <div className="slider">
-                <div className="slider-top"><label htmlFor="limO2">Oxigênio</label><b>{nf(scO2, scO2 % 1 ? 1 : 0)}%</b></div>
+                <div className="slider-top"><label htmlFor="limO2">Oxygen</label><b>{nf(scO2, scO2 % 1 ? 1 : 0)}%</b></div>
                 <input id="limO2" type="range" min={X0} max={X1} step={0.5} value={Math.min(X1, Math.max(X0, scO2))} onChange={(e) => setScenario({ o2: +e.target.value / 100 }, undefined, true)}
                   style={{ ['--fill' as string]: `${((Math.min(X1, Math.max(X0, scO2)) - X0) / (X1 - X0)) * 100}%` }} />
               </div>
               <div className="slider">
-                <div className="slider-top"><label htmlFor="limW">Vento</label><b>{wind > 0 ? `${nf(wind, wind < 5 && wind % 1 ? 1 : 0)} cm/s` : 'cortado'}</b></div>
+                <div className="slider-top"><label htmlFor="limW">Airflow</label><b>{wind > 0 ? `${nf(wind, wind < 5 && wind % 1 ? 1 : 0)} cm/s` : 'off'}</b></div>
                 <input id="limW" type="range" min={0} max={WIND_MAX} step={1} value={wind} onChange={(e) => setWind(+e.target.value)} style={{ ['--fill' as string]: `${(wind / WIND_MAX) * 100}%` }} />
               </div>
             </div>
           )}
           <div className="limits-legend">
-            <span><i style={{ background: 'var(--g1)' }} />Queimou</span>
-            <span><i style={{ background: 'var(--g0)' }} />Apagou</span>
-            {bound && <span><svg width="18" height="12" viewBox="0 0 18 12" aria-hidden="true"><path d="M1,6 L17,6" className="limits-curve" /></svg>Curva da NASA</span>}
-            {bound && <span><i className="scn" />Seu cenário (arraste)</span>}
+            <span><i style={{ background: 'var(--g1)' }} />Burned</span>
+            <span><i style={{ background: 'var(--g0)' }} />Went out</span>
+            {bound && <span><svg width="18" height="12" viewBox="0 0 18 12" aria-hidden="true"><path d="M1,6 L17,6" className="limits-curve" /></svg>NASA curve</span>}
+            {bound && <span><i className="scn" />Your scenario (drag)</span>}
           </div>
           {why && as && bound && st && (
-            <aside className="test-card limits-why" aria-label="Como esta leitura foi feita">
-              <header><b>{st.text}</b><button className="x" onClick={() => setWhy(false)} aria-label="Fechar">×</button></header>
+            <aside className="test-card limits-why" aria-label="How this reading was made">
+              <header><b>{st.text}</b><button className="x" onClick={() => setWhy(false)} aria-label="Close">×</button></header>
               <dl>
-                <dt>O que a curva diz</dt><dd>{as.detail}</dd>
+                <dt>What the curve says</dt><dd>{as.detail}</dd>
                 {partial && (
-                  <><dt>Vento que entra na conta</dt><dd>
-                    {nf(as.forced_cm_s, 0)} cm/s da ventilação, somados a um vento de {nf(as.buoyant_cm_s[0], 0)} a {nf(as.buoyant_cm_s[1], 0)} cm/s que a gravidade cria junto à chama. É a barra acima do ponto.
+                  <><dt>Airflow taken into account</dt><dd>
+                    {nf(as.forced_cm_s, 0)} cm/s from ventilation, plus {nf(as.buoyant_cm_s[0], 0)} to {nf(as.buoyant_cm_s[1], 0)} cm/s of buoyant flow that gravity drives around the flame. That is the bar above the dot.
                   </dd></>
                 )}
-                {as.outside.length > 0 && (<><dt>Por que é estimativa</dt><dd><ul>{as.outside.map((o) => <li key={o}>{o}</li>)}</ul></dd></>)}
-                <dt>Quanto dá para confiar na curva</dt>
+                {as.outside.length > 0 && (<><dt>Why this is an estimate</dt><dd><ul>{as.outside.map((o) => <li key={o}>{o}</li>)}</ul></dd></>)}
+                <dt>How far to trust the curve</dt>
                 <dd>
-                  {bound.check.blowoff.n} apagamentos por vento lidos do apêndice ficam, em média, a {nf(bound.check.blowoff.rms_diff_o2, 1)} ponto de O₂ dela (o pior, a {nf(bound.check.blowoff.max_abs_diff_o2, 1)}). A faixa clara em volta da curva tem essa largura.
-                  {` Em 1 g a NASA mediu ${nf(bound.buoyancy.earth_check.o2, 1)}% de O₂ no limite; a curva dá ${nf(bound.buoyancy.earth_check.curve_o2, 1)}%.`}
+                  {bound.check.blowoff.n} blowoff extinctions read from the appendix lie on average {nf(bound.check.blowoff.rms_diff_o2, 1)} O₂ percentage points from it (the worst, {nf(bound.check.blowoff.max_abs_diff_o2, 1)}). The light band around the curve is that wide.
+                  {` At 1 g, NASA measured ${nf(bound.buoyancy.earth_check.o2, 1)}% O₂ at the limit; the curve gives ${nf(bound.buoyancy.earth_check.curve_o2, 1)}%.`}
                 </dd>
-                {as.outside.length > 0 && (<><dt>Como tirar a dúvida</dt><dd><button className="link" onClick={() => setView('proximo')}>Ver a fila de experimentos que fecham estas ressalvas</button></dd></>)}
-                <dt>De onde vem</dt><dd className="mono"><a href={bound.published.url} target="_blank" rel="noreferrer">{bound.published.source}</a> · {bound.published.equation}</dd>
+                {as.outside.length > 0 && (<><dt>How to settle it</dt><dd><button className="link" onClick={() => setView('proximo')}>See the queue of experiments that would close these caveats</button></dd></>)}
+                <dt>Source</dt><dd className="mono"><a href={bound.published.url} target="_blank" rel="noreferrer">{bound.published.source}</a> · {bound.published.equation}</dd>
               </dl>
             </aside>
           )}
           {hover && !drag && (
             <div className="map-tip" style={{ left: Math.max(8, Math.min(hover.x + 14, w - 250)), top: Math.max(8, hover.y > h - 150 ? hover.y - 86 : hover.y + 14) }}>
               <b>{data.name} · {hover.t.test}</b>
-              <span>{WHAT[hover.p.state]} com {nf(hover.p.o2, 1)}% de O₂ e {hover.p.flow_range && hover.p.flow_cm_s! < 2 ? 'o ar quase parado (menos de 2 cm/s)' : `vento de ${nf(hover.p.flow_cm_s!, hover.p.flow_cm_s! < 10 ? 1 : 0)} cm/s`}</span>
-              <span>{hover.t.material}{hover.t.geometry ? ` · chama ${hover.t.geometry}` : ''} · toque para abrir</span>
+              <span>{WHAT[hover.p.state]} at {nf(hover.p.o2, 1)}% O₂ and {hover.p.flow_range && hover.p.flow_cm_s! < 2 ? 'near-still air (under 2 cm/s)' : `an airflow of ${nf(hover.p.flow_cm_s!, hover.p.flow_cm_s! < 10 ? 1 : 0)} cm/s`}</span>
+              <span>{hover.t.material}{hover.t.geometry ? ` · flame: ${GEOMETRY[hover.t.geometry] ?? hover.t.geometry}` : ''} · tap to open</span>
             </div>
           )}
         </>

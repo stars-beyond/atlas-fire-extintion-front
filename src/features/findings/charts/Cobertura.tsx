@@ -3,10 +3,10 @@ import { FAMILY, nf, pct } from '../../../lib/format'
 import { Frame, Wd, lin } from './Frame'
 
 export function Cobertura({ data }: { data: { family: string; n: number; o2_min: number; o2_max: number }[] }) {
-  const x = lin(0, 1, 110, Wd - 16); const refs: [number, string, string][] = [[0.21, 'ISS 21%', 'var(--g0)'], [0.3, 'Lua ≥30%', 'var(--act)'], [0.34, 'exploração 34%', 'var(--act)']]
+  const x = lin(0, 1, 110, Wd - 16); const refs: [number, string, string][] = [[0.21, 'ISS 21%', 'var(--g0)'], [0.3, 'Moon ≥30%', 'var(--act)'], [0.34, 'exploration 34%', 'var(--act)']]
   const col: Record<string, string> = { solido: 'var(--solido)', gota: 'var(--gota)', gas: 'var(--gas)' }
   return (
-    <Frame h={170} label="Faixa de O₂ testada por família de combustível">
+    <Frame h={170} label="O₂ band tested, by fuel family">
       {[0, 0.2, 0.4, 0.6, 0.8, 1].map((t) => (<g key={t}><line className="grid" x1={x(t)} x2={x(t)} y1={34} y2={140} /><text x={x(t)} y={156} textAnchor="middle">{pct(t)}</text></g>))}
       {data.map((d, i) => (<g key={d.family}>
         <text x={0} y={62 + i * 30}>{FAMILY[d.family]} ({nf(d.n)})</text>

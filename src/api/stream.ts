@@ -11,7 +11,7 @@ export async function askStream(question: string, scenario: Scenario, conversati
   })
   if (!res.ok || !res.body) {
     const data = await res.json().catch(() => ({}))
-    throw new Error(data.error || `O servidor respondeu ${res.status}`)
+    throw new Error(data.error || `The server responded with ${res.status}`)
   }
   const reader = res.body.pipeThrough(new TextDecoderStream()).getReader()
   let buf = ''
@@ -32,8 +32,8 @@ export async function askStream(question: string, scenario: Scenario, conversati
       if (event === 'contexto') on.contexto?.(d)
       else if (event === 'texto') on.texto?.(d.t)
       else if (event === 'resposta') return d as Answer
-      else if (event === 'erro') throw new Error(d.error || 'O servidor não conseguiu responder.')
+      else if (event === 'erro') throw new Error(d.error || 'The server could not answer.')
     }
   }
-  throw new Error('A conexão terminou antes da resposta.')
+  throw new Error('The connection closed before the answer arrived.')
 }

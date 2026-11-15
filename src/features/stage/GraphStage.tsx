@@ -12,7 +12,7 @@ const COLOR: Record<string, string> = {
   cenario: 'var(--act)', investigacao: 'var(--dim)', material: 'var(--solido)', gravidade: 'var(--g0)', desfecho: 'var(--medido)',
 }
 const FAMILY: Record<string, string> = { solido: 'var(--solido)', gota: 'var(--gota)', gas: 'var(--gas)' }
-const TYPE_NAME: Record<string, string> = { investigacao: 'Investigação', material: 'Material', gravidade: 'Gravidade', desfecho: 'Desfecho' }
+const TYPE_NAME: Record<string, string> = { investigacao: 'Investigation', material: 'Material', gravidade: 'Gravity', desfecho: 'Outcome' }
 
 interface Placed extends GNode { x: number; y: number; r: number; angle: number }
 
@@ -84,7 +84,7 @@ export function GraphStage() {
   const pick = (p: Placed) => { setHover(null); setFocus(p.id === focus ? null : p.id) }
   return (
     <div ref={box} style={{ position: 'absolute', inset: 0 }}>
-      <svg className={`graph-svg${focus ? ' focused' : ''}`} role="img" aria-label="Grafo das relações entre o cenário e os testes mais parecidos" onClick={() => setFocus(null)}>
+      <svg className={`graph-svg${focus ? ' focused' : ''}`} role="img" aria-label="Graph of the links between the scenario and the most similar tests" onClick={() => setFocus(null)}>
         {g?.edges.map((e, i) => {
           const a = by.get(e.source), b = by.get(e.target); if (!a || !b) return null
           const near = e.type === 'PROXIMO'
@@ -115,26 +115,26 @@ export function GraphStage() {
       </svg>
       {cur && (
         <aside className="graph-focus" aria-live="polite">
-          <span className="cap">{cur.type === 'cenario' ? 'Seu cenário' : cur.type === 'teste' ? 'Teste da NASA' : TYPE_NAME[cur.type]}</span>
+          <span className="cap">{cur.type === 'cenario' ? 'Your scenario' : cur.type === 'teste' ? 'NASA test' : TYPE_NAME[cur.type]}</span>
           <b>{cur.label}</b>
           {cur.detail && <span>{cur.detail}</span>}
-          <span className="faint">{around.length === 1 ? '1 ligação' : `${around.length} ligações`} ao redor. Toque numa delas para seguir.</span>
+          <span className="faint">{around.length === 1 ? '1 link' : `${around.length} links`} around it. Tap one to follow it.</span>
           <div className="actions">
-            {cur.test_id && <button className="link" onClick={() => selectTest(cur.test_id!)}>Abrir o teste</button>}
-            <button className="link" onClick={() => setFocus(null)}>Voltar ao grafo inteiro</button>
+            {cur.test_id && <button className="link" onClick={() => selectTest(cur.test_id!)}>Open test</button>}
+            <button className="link" onClick={() => setFocus(null)}>Back to full graph</button>
           </div>
         </aside>
       )}
-      <div className="graph-legend" aria-label="O que cada bola é">
-        <span><i style={{ background: 'var(--act)' }} />Seu cenário</span>
-        <span><i style={{ background: 'var(--solido)' }} />Teste parecido</span>
-        <span><i className="dash" />Parecido com o seu</span>
-        <span><i style={{ background: 'var(--dim)' }} />Investigação</span>
-        <span><i style={{ background: 'var(--g0)' }} />Gravidade</span>
-        <span><i style={{ background: 'var(--medido)' }} />Desfecho</span>
+      <div className="graph-legend" aria-label="What each node is">
+        <span><i style={{ background: 'var(--act)' }} />Your scenario</span>
+        <span><i style={{ background: 'var(--solido)' }} />Similar test</span>
+        <span><i className="dash" />Similar to yours</span>
+        <span><i style={{ background: 'var(--dim)' }} />Investigation</span>
+        <span><i style={{ background: 'var(--g0)' }} />Gravity</span>
+        <span><i style={{ background: 'var(--medido)' }} />Outcome</span>
       </div>
-      {!g && <p className="lab-wait">Montando o grafo…</p>}
-      {g && g.nodes.length <= 1 && <p className="lab-wait">Nenhum teste deste tipo tem oxigênio e pressão tabelados.</p>}
+      {!g && <p className="lab-wait">Building the graph…</p>}
+      {g && g.nodes.length <= 1 && <p className="lab-wait">No test of this type has tabulated oxygen and pressure.</p>}
     </div>
   )
 }

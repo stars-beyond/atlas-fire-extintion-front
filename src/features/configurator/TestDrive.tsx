@@ -18,29 +18,29 @@ export function TestDriveStep() {
     return (
       <div className="step">
         <header className="step-head">
-          <span className="eyebrow">Passo 3 de 4</span>
-          <h1>Pronto para o test drive</h1>
-          <p>Vamos acender <b>{mat.name.toLowerCase()}</b> {hab ? <>em <b>{hab.name.toLowerCase()}</b></> : 'no seu ambiente'}: {pct(scenario.o2)} de oxigênio, {psi(scenario.pressure_atm)}, {gLabel(scenario.gravity)}.</p>
+          <span className="eyebrow">Step 3 of 4</span>
+          <h1>Ready for the test drive</h1>
+          <p>We will ignite <b>{mat.noun}</b> {hab ? <>in <b>{hab.name}</b></> : 'in your environment'}: {pct(scenario.o2)} oxygen, {psi(scenario.pressure_atm)}, {gLabel(scenario.gravity)}.</p>
         </header>
-        {described.length > 0 && <div className="badges"><span className="eyebrow">Entendi da sua descrição</span>{described.map((d) => (<span key={d} className="pill">{d}</span>))}</div>}
+        {described.length > 0 && <div className="badges"><span className="eyebrow">What I understood from your description</span>{described.map((d) => (<span key={d} className="pill">{d}</span>))}</div>}
         <button className="ignite" onClick={() => { setStageView('chama'); ignite() }}>
-          <span className="ignite-dot" />Acender
+          <span className="ignite-dot" />Ignite
         </button>
-        <p className="hint">A chama no palco é uma simulação de estudo. O que vale é o que vem depois: o que a NASA já testou nessa condição.</p>
+        <p className="hint">The flame on the stage is a study simulation. What counts is what comes next: what NASA has already tested at this condition.</p>
       </div>
     )
   }
-  const tabs: [Tab, string][] = [['evidencia', 'Evidência'], ['lacunas', 'Falta testar'], ['apagar', 'Apagar'], ['perguntar', 'Perguntar']]
+  const tabs: [Tab, string][] = [['evidencia', 'Evidence'], ['lacunas', 'Gaps'], ['apagar', 'Put it out'], ['perguntar', 'Ask']]
   return (
     <div className="step">
       <header className="step-head tight">
-        <span className="eyebrow">Passo 3 de 4 · test drive</span>
+        <span className="eyebrow">Step 3 of 4 · test drive</span>
         <div className="tabs" role="tablist">
           {tabs.map(([id, l]) => (<button key={id} role="tab" aria-selected={tab === id} onClick={() => { setTab(id); if (id === 'apagar') setStageView('chama') }}>{l}</button>))}
         </div>
       </header>
       {tab === 'evidencia' && <Evidencia onGaps={() => setTab('lacunas')} />}
-      {tab === 'lacunas' && <div className="block"><h2>O que falta testar</h2><Gaps /></div>}
+      {tab === 'lacunas' && <div className="block"><h2>What is still untested</h2><Gaps /></div>}
       {tab === 'apagar' && <Apagar />}
       {tab === 'perguntar' && <Perguntar />}
     </div>
