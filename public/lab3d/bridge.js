@@ -26,6 +26,10 @@ window.FL.ready(function () {
   let sim = null, view, dead = false, lit = false, seq = 0, n = 0;
   let action = null, out = null, wasBurning = false;
   let acc = 0, lastStep = 0, redraw = true, paused = false;
+  // Sem chama pedida, o solver só aquece o escoamento por WARM quadros depois de cada reinício e para:
+  // a página do simulador divide a thread com o Atlas (iframe da mesma origem) e não deve pesar à toa.
+  const WARM = 30;
+  let warm = 0;
   const TIERS = ['min', 'leve', 'padrao'];
   let tier = software ? 'min' : 'padrao';
   let autoDone = software, aN = 0, aSum = 0, lastT = 0, avgMs = 0;
@@ -54,7 +58,7 @@ window.FL.ready(function () {
     if (aN < 40) return;
     avgMs = aSum / aN; aN = aSum = 0;
     const i = TIERS.indexOf(tier);
-    if (!autoDone && avgMs > 40 && i > 0) { tier = TIERS[avgMs > 120 ? 0 : i - 1]; avgMs = 0; build(); return; }
+    if (!autoDone && avgMs > 30 && i > 0) { tier = TIERS[avgMs > 120 ? 0 : i - 1]; avgMs = 0; build(); return; }
     autoDone = true;
   }
   function restart() {
@@ -62,7 +66,7 @@ window.FL.ready(function () {
     sim.reset(P);
     sim.stepFrame(P);
     action = P.sup.on ? { label: 'a descarga de ' + SHORT[P.sup.agent], t: 0 } : null;
-    out = null; wasBurning = false; redraw = true;
+    out = null; wasBurning = false; redraw = true; warm = 0;
   }
 
   /* ---------- o que o Atlas pede ---------- */
@@ -167,6 +171,11 @@ window.FL.ready(function () {
   function tick(now) {
     requestAnimationFrame(tick);
     if (dead || !sim || document.hidden || paused) { lastT = lastStep = now; return; }
+    if (!lit && warm >= WARM) {         // sem chama: nada a calcular; só redesenha se a câmera mudou
+      lastT = lastStep = now;
+      if (redraw) { view.render(sim, sim.count - 1, P); overlay(); redraw = false; }
+      return;
+    }
     autoQuality(now);
     acc += Math.min(now - lastStep, 100) / 1000; lastStep = now;
     let stepped = false;
@@ -175,6 +184,7 @@ window.FL.ready(function () {
       if (sim.count >= sim.cap) sim.wrap();
       sim.stepFrame(P);
       stepped = true;
+      if (!lit) warm++;
     }
     sim.poll();
     if (stepped || redraw) { view.render(sim, sim.count - 1, P); overlay(); redraw = false; }

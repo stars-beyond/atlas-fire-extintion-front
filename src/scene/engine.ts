@@ -283,7 +283,9 @@ export function createHabitatEngine(host: HTMLDivElement, labelHost: HTMLDivElem
     controls.update(); renderer.render(scene, camera); labels.render(scene, camera)
     publishCam()
     frames = Math.max(0, frames - 1)
-    if (continuous() || frames > 0 || goal || Math.abs(want - exposure) > 0.01 || Math.abs(shadeGoal() - shade.material.opacity) > 0.01) raf = requestAnimationFrame(frame)
+    // !raf: o controls.update() acima dispara 'change' → kick(), que pode já ter agendado o próximo quadro.
+    // Agendar de novo aqui dobraria a cadeia a cada quadro (a cena chegava a ser desenhada centenas de vezes por quadro).
+    if (!raf && (continuous() || frames > 0 || goal || Math.abs(want - exposure) > 0.01 || Math.abs(shadeGoal() - shade.material.opacity) > 0.01)) raf = requestAnimationFrame(frame)
   }
   const kick = (n = 60) => { frames = Math.max(frames, n); if (!raf && !disposed) raf = requestAnimationFrame(frame) }
   controls.addEventListener('change', () => kick(40))

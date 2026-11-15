@@ -145,6 +145,16 @@ function LabStage({ mat }: { mat: number }) {
     if (labCam.last) send(labCam.last)
     return () => { if (labCam.send === send) labCam.send = null }
   }, [ready])
+  // palco fora da tela (rolagem, celular): o simulador pausa e libera a thread da página
+  useEffect(() => {
+    const el = ref.current
+    if (!ready || !el || typeof IntersectionObserver === 'undefined') return
+    const io = new IntersectionObserver(([e]) => {
+      el.contentWindow?.postMessage({ type: 'atlas:pause', paused: !e.isIntersecting }, location.origin)
+    })
+    io.observe(el)
+    return () => io.disconnect()
+  }, [ready])
   const lit = ignited && step >= 2
   useEffect(() => {
     if (!ready) return
