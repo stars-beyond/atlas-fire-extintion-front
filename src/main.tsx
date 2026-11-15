@@ -5,9 +5,9 @@ import '@fontsource-variable/martian-mono'
 import '@fontsource/ibm-plex-sans/400.css'
 import '@fontsource/ibm-plex-sans/500.css'
 import '@fontsource/ibm-plex-sans/600.css'
-import './theme.css'
-import { App } from './App'
-import { AtlasProvider } from './store'
+import './styles/index.css'
+import { App } from './app/App'
+import { AtlasProvider } from './state'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

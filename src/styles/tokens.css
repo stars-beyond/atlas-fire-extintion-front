@@ -1,0 +1,15 @@
+/* Variáveis de cor, fontes e esquema escuro (custom properties em :root).
+   Ordem e conteúdo iguais ao trecho original do theme.css; veja a ordem dos @import em index.css. */
+:root {
+  --ink-0: #070b11; --ink-1: #0e141d; --ink-2: #151d29; --ink-3: #1e2938; --ink-4: #2b3a4f;
+  --line: #222e40; --line-2: #33445c;
+  --text: #e9eff8; --dim: #a3b1c6; --faint: #6f819a;
+  --g0: #5fb0ff; --g1: #ff8a3d; --lua: #cfc9b6; --marte: #e0764c;
+  --act: #ffd466; --act-ink: #231b03;
+  --medido: #48d6a0; --delimitado: #86b9ff; --parcial: #f2b65c; --incognita: #ef7a9c;
+  --solido: #f1d27c; --gota: #54d3c6; --gas: #9aa2ff; --fumaca: #8b99ad;
+  --display: 'Bricolage Grotesque Variable', 'IBM Plex Sans', system-ui, sans-serif;
+  --ui: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono: 'Martian Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
+  color-scheme: dark;
+}

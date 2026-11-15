@@ -1,0 +1,12 @@
+/* Achados: auditoria da tabela do PSI contra o relatório.
+   Ordem e conteúdo iguais ao trecho original do theme.css; veja a ordem dos @import em index.css. */
+/* auditoria da tabela do PSI contra o relatório */
+.audit-counts { max-width: 620px; }
+.audit-group { display: grid; gap: 12px; }
+.audit-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr)); gap: 10px; }
+.audit-item { border-left-width: 3px; gap: 8px; padding: 14px 16px; }
+.audit-item h3 { font-size: 15.5px; } .audit-item p { font-size: 13.5px; color: var(--dim); }
+.audit-item .pill { white-space: normal; text-align: right; }
+.audit-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.audit-pair div { background: var(--ink-2); border-radius: 8px; padding: 6px 10px; }
+.audit-pair dt { font-size: 11px; color: var(--faint); } .audit-pair dd { font-family: var(--display); font-size: 18px; font-weight: 650; }

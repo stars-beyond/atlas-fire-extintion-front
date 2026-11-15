@@ -1,0 +1,7 @@
+/* Ficha técnica: números do cenário, listas e ações (também usados na ficha do próximo fogo e no foco do grafo).
+   Ordem e conteúdo iguais ao trecho original do theme.css; veja a ordem dos @import em index.css. */
+.specs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.specs div { background: var(--ink-2); border-radius: 12px; padding: 12px 14px; }
+.specs dt { font-size: 12px; color: var(--dim); } .specs dd { font-family: var(--display); font-size: 22px; font-weight: 650; }
+.plain { padding-left: 20px; display: grid; gap: 6px; color: var(--dim); } .plain b { color: var(--text); font-weight: 600; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; }

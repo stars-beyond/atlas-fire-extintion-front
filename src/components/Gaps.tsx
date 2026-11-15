@@ -1,8 +1,9 @@
 // "O que falta testar": os ensaios que mais tirariam os habitats de exploração do escuro, para o material escolhido.
 // A lista vem da API (/next-tests) e mora no store, porque aparece em três lugares: na aba "Falta testar" do
 // test drive, na ficha técnica e no mapa (onde cada ensaio é um marcador numerado no andar em que ele seria feito).
-import { TIER, gLabel, pct, psi, type NextTest, type Tier } from '../api'
-import { materialOf, useAtlas } from '../store'
+import { TIER, gLabel, pct, psi } from '../lib/format'
+import { materialOf, useAtlas } from '../state'
+import type { NextTest, Tier } from '../types'
 
 export const gapLabel = (n: NextTest) => `${pct(n.o2)} de O₂ · ${psi(n.pressure_atm)} · ${gLabel(n.gravity)}`
 const TIER_BY_LABEL = Object.fromEntries((Object.keys(TIER) as Tier[]).map((t) => [TIER[t].label, t])) as Record<string, Tier>

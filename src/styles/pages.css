@@ -1,0 +1,44 @@
+/* Páginas do acervo (achados, investigações, próximo fogo): cartões, tabelas, gráficos e o construtor de gráficos.
+   Ordem e conteúdo iguais ao trecho original do theme.css; veja a ordem dos @import em index.css. */
+/* ---------- páginas do acervo */
+.page { overflow: auto; min-height: 0; }
+.page-in { max-width: 1180px; margin: 0 auto; padding: 30px 24px 48px; display: grid; gap: 24px; }
+.page h1 { font-size: clamp(26px, 3vw, 36px); } .page h2 { font-size: 19px; }
+.lede { color: var(--dim); max-width: 70ch; font-size: 16px; }
+.split { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+.card { border: 1px solid var(--line); border-radius: 14px; background: var(--ink-1); padding: 18px; display: grid; gap: 12px; min-width: 0; align-content: start; }
+.insights { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 1fr)); gap: 18px; align-items: start; }
+.finding { font-size: 15.5px; line-height: 1.5; }
+.note, .empty { font-size: 13px; color: var(--faint); line-height: 1.45; }
+.empty { padding: 20px; text-align: center; }
+.badges { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.pill { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line-2); border-radius: 99px; padding: 2px 10px; font-size: 12px; color: var(--dim); white-space: nowrap; }
+.swatch { width: 9px; height: 9px; border-radius: 50%; display: inline-block; flex: none; }
+.sec-title { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.kv { display: grid; grid-template-columns: minmax(110px, 38%) minmax(0, 1fr); gap: 5px 12px; font-size: 13.5px; }
+.kv dt { color: var(--faint); } .kv dd { overflow-wrap: anywhere; }
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+th { text-align: left; font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); font-weight: 400; padding: 10px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; background: var(--ink-1); }
+td { padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+tr:last-child td { border-bottom: 0; }
+tr.sel td { background: var(--ink-3); } tr.click { cursor: pointer; } tr.click:hover td { background: var(--ink-2); }
+.num { text-align: right; font-variant-numeric: tabular-nums; }
+.scorebar { display: flex; height: 8px; width: 120px; border-radius: 4px; overflow: hidden; background: var(--ink-4); }
+.scorebar i { display: block; height: 100%; }
+.diff { color: var(--act); } .same { color: var(--faint); }
+.chart text { fill: var(--dim); font-family: var(--mono); font-size: 10px; }
+.chart .grid { stroke: var(--line); }
+.builder { display: grid; grid-template-columns: minmax(210px, 280px) minmax(0, 1fr); gap: 16px; align-items: start; }
+.builder-form { gap: 12px; position: sticky; top: 0; padding: 16px; }
+.builder-form h2 { font-size: 17px; }
+.builder-form .cta { text-align: center; }
+.builder-main { display: grid; gap: 18px; min-width: 0; }
+.fld { display: grid; gap: 6px; }
+.fld > span { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); }
+.fld select, .askbox select { background: var(--ink-0); border: 1.5px solid var(--line-2); border-radius: 10px; padding: 8px 10px; width: 100%; min-width: 0; font-size: 14px; }
+.builder-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.builder-actions .ghost { text-align: center; padding: 8px 6px; } .builder-actions .ghost:disabled { opacity: .4; }
+.builder .recharts-legend-item-text { color: var(--dim) !important; }
+.builder .recharts-surface { overflow: visible; }
+@media (max-width: 600px) { .builder { grid-template-columns: minmax(0, 1fr); } .builder-form { position: static; } .builder-main { order: -1; } }

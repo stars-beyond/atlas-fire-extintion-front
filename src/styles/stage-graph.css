@@ -1,0 +1,13 @@
+/* Palco: vista "Grafo".
+   Ordem e conteúdo iguais ao trecho original do theme.css; veja a ordem dos @import em index.css. */
+.graph-svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.graph-svg text { font-family: var(--ui); font-size: 11px; fill: var(--dim); pointer-events: none; }
+.graph-svg .n-node { cursor: pointer; transition: transform .38s cubic-bezier(.2,.8,.2,1), opacity .25s; }
+.graph-svg line { transition: opacity .25s; }
+.graph-svg .n-node:hover circle { stroke: var(--act); }
+.graph-svg .n-node.on text { font-size: 13px; fill: var(--text); font-weight: 600; }
+.graph-focus { position: absolute; left: 16px; bottom: 58px; max-width: min(300px, calc(100% - 32px)); display: grid; gap: 3px; padding: 10px 14px; background: rgba(14,20,29,.92); border: 1px solid var(--line-2); border-left: 3px solid var(--act); border-radius: 10px; font-size: 13px; color: var(--dim); backdrop-filter: blur(8px); z-index: 2; }
+.graph-focus b { font-family: var(--display); font-size: 16px; color: var(--text); line-height: 1.2; }
+.graph-focus .actions { gap: 4px 16px; margin-top: 4px; }
+.graph-svg .n-teste:hover circle { stroke: var(--act); }
+.graph-svg .lbl-main { fill: var(--text); font-weight: 600; }

@@ -1,4 +1,5 @@
-import { TIER, type Tier } from '../api'
+import { TIER } from '../lib/format'
+import type { Tier } from '../types'
 
 // O selo de evidência: o único elemento que muda de forma além de cor (cheio, meio, um quarto, hachurado).
 export function Seal({ tier, big, sub }: { tier: Tier; big?: boolean; sub?: string }) {

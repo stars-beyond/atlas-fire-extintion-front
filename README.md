@@ -43,10 +43,29 @@ Ou pelo painel (Workers & Pages → repositório conectado): build command `npm 
 
 ## Estrutura
 
-| Caminho | O que é |
+```
+src/
+├─ main.tsx            entrada
+├─ app/                App (troca de telas) e layout/ (Header, SpecBar)
+├─ api/                client (API_BASE de VITE_API_URL ou /api), stream (SSE) e um módulo por domínio;
+│                      index.ts junta tudo no objeto `api`
+├─ types/              tipos das respostas da API, por domínio
+├─ state/              AtlasProvider (contexto e useAtlas), materiais, estado do lab3d (useLab)
+├─ features/
+│  ├─ configurator/    Habitat, Material, Test drive (abas Evidência e Apagar) e Ficha técnica
+│  ├─ stage/           palco: Stage orquestra cena do habitat, lab3d, mapa, grafo e limites
+│  ├─ ask/             Perguntar, resposta em streaming, Markdown com fórmulas
+│  ├─ findings/        Achados, Monte seu gráfico, Auditoria
+│  ├─ investigations/  Investigações (ficha e comparação)
+│  └─ next-fire/       Próximo fogo
+├─ three/              cena 3D (three.js): engine, peças, modelos, mapa dos testes
+├─ components/         peças usadas por mais de uma feature (Seal, Gaps)
+├─ lib/                formatação pt-BR, download, detecção de GPU (modo leve)
+└─ styles/             tokens, base e uma folha por área, importadas em index.css na ordem original
+```
+
+| Fora de `src/` | O que é |
 |---|---|
-| `src/api.ts` | Cliente da API e tipos. `API_BASE` vem de `VITE_API_URL` ou cai em `/api` |
-| `src/` | React, three.js e recharts: só desenho e estado da tela |
 | `public/lab3d/` | Laboratório de chama 3D (iframe); recebe a base da API por `?api=` |
 | `public/models/`, `public/draco/` | Modelos 3D dos habitats e o decodificador Draco |
 | `public/_headers` | Cache dos arquivos estáticos |
