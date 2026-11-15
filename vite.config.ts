@@ -6,5 +6,5 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: { port: 5173, proxy: { '/api': { target: process.env.ATLAS_API || 'http://localhost:8787', changeOrigin: true } } },
-  build: { outDir: 'dist', sourcemap: false, chunkSizeWarningLimit: 1500 },
+  build: { outDir: 'dist', sourcemap: false, chunkSizeWarningLimit: 2000 },
 })

@@ -12,11 +12,9 @@
     // só /api/* acorda o Worker; o resto sai direto do cache de arquivos estáticos
     "run_worker_first": ["/api/*"]
   },
-  "vars": {
-    // Endereço do backend (API Go do atlas-fire-extintion). Precisa ser um NOME, não um IP:
-    // o Cloudflare bloqueia fetch de Worker para IP (erro 1003). Ex.: "https://api.seudominio.com".
-    // Pode ser sobrescrito no deploy: npx wrangler deploy --var API_ORIGIN:https://api.seudominio.com
-    "API_ORIGIN": ""
-  },
+  // API_ORIGIN (endereço do backend) fica no painel: Settings → Variables and Secrets.
+  // keep_vars impede que um novo deploy apague o que foi definido lá.
+  // Precisa ser um NOME, não um IP: o Cloudflare bloqueia fetch de Worker para IP (erro 1003).
+  "keep_vars": true,
   "observability": { "enabled": true }
 }
