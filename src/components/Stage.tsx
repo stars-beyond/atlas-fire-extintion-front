@@ -368,7 +368,7 @@ export function Stage() {
               ? compared
                 ? `A chama é do simulador (o lugar é ilustrativo). Sem gravidade, o oxigênio mínimo dela fica a ${nf(val!.rms_o2, 1)} ponto da curva da NASA; os tempos não são fiéis. O veredito vem dos testes da NASA.`
                 : `A chama é do simulador (o lugar é ilustrativo)${mat.material === 'nomex' ? ', com parâmetros hipotéticos para o Nomex' : ''}, sem comparação com dados da NASA para este material. O veredito vem dos testes da NASA.`
-              : labOff ? 'Ilustração: o simulador 3D não abriu neste navegador. A chama desenhada só segue a gravidade.'
+              : labOff ? `${labOff} A chama desenhada só segue a gravidade; o veredito continua vindo dos testes da NASA.`
               : 'Ilustração: o simulador 3D ainda não tem este material. A chama desenhada só segue a gravidade.'}</span>
             <span className="hint-short">
               {inScene ? 'O ponto de luz marca onde o ensaio acontece.'

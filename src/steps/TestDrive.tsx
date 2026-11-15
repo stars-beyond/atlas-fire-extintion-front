@@ -135,7 +135,8 @@ function Entry({ e }: { e: LogEntry }) {
   return (
     <article className="qa">
       <h3>{e.question}</h3>
-      {e.pending && <p className="hint">Lendo os testes e os relatórios da NASA…</p>}
+      {e.pending && !e.partial && <p className="hint">{e.verdict ? `Evidência: ${e.verdict.label}. Lendo os relatórios da NASA…` : 'Lendo os testes e os relatórios da NASA…'}</p>}
+      {e.pending && e.partial && (<><div className="streaming"><Markdown text={e.partial} onCite={() => {}} /></div><p className="hint">Escrevendo… as fontes aparecem no fim.</p></>)}
       {e.error && <p className="hint bad">Não consegui responder: {e.error}. Tente de novo.</p>}
       {a && (
         <>

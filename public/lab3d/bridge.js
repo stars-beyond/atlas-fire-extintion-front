@@ -59,6 +59,8 @@ window.FL.ready(function () {
     avgMs = aSum / aN; aN = aSum = 0;
     const i = TIERS.indexOf(tier);
     if (!autoDone && avgMs > 30 && i > 0) { tier = TIERS[avgMs > 120 ? 0 : i - 1]; avgMs = 0; build(); return; }
+    // já na qualidade mínima e ainda lento: o Atlas troca pela chama ilustrada (modo leve)
+    if (!autoDone && avgMs > 50 && i === 0) { fail('Modo leve: o simulador 3D ficou lento neste aparelho, então a chama é ilustrada.'); return; }
     autoDone = true;
   }
   function restart() {
@@ -124,15 +126,10 @@ window.FL.ready(function () {
       else if (wasBurning && !igniting) out = { dt: action ? t - action.t : null, label: action && action.label, agent: sim.agent };
       wasBurning = burning;
     }
-    // veredito pela curva publicada pela NASA (FL.judge); material sem curva não tem veredito
-    const rad = P.shape === 'slab' ? 0 : P.size;
-    const j = FL.judge(FL.MATS[P.mat], P.wind, P.g, P.o2, sim.agent, P.sup.agent, rad);
-    const j0 = FL.judge(FL.MATS[P.mat], P.wind, P.g, P.o2, 0, P.sup.agent, rad);
     post({
       type: 'atlas:metrics', lit, igniting, burning, measured: !!m,
       hrr: m ? m.hrr : 0, tk: m ? m.tk : 0, agent: sim.agent, agentKey: P.sup.agent, supOn: P.sup.on,
       o2eff: P.o2 * (1 - sim.agent), wind: P.wind, out,
-      judge: j.none ? { none: true, mode: j.mode, Xe: j.Xe } : { mode: j.mode, xm: j.xm, xlo: j.xlo, Xe: j.Xe, dmin: j0.dmin, dmin0: j0.dmin0, burns0: j0.burns },
       material: FL.MATS[P.mat].n, tier: sim.q.n, fps: avgMs ? Math.round(1000 / avgMs) : 0
     });
   }

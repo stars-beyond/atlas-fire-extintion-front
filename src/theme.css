@@ -535,3 +535,6 @@ tr.sel td { background: var(--ink-3); } tr.click { cursor: pointer; } tr.click:h
 .gap-main .link { font-size: 13px; }
 .tabs button { padding: 10px 4px; font-size: 13.5px; }
 @media print { .gap, .study { background: #f3f3f3; border-color: #ddd; } .gap-where, .gap-closes, .study-why, .study-near, .gaps > p { color: #444 !important; } }
+
+/* resposta chegando aos pedaços (SSE): mesmo texto, um pouco mais apagado até a versão final validada */
+.qa .streaming { opacity: 0.86; }

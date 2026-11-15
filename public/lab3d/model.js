@@ -217,12 +217,9 @@
     FL.loadConfig(url).then(fn);
   };
 
-  /* ---------- fronteira de inflamabilidade (curva publicada) ---------- */
-  // O2 mínimo (%) para a chama se sustentar com vento U (cm/s) numa amostra de raio r (cm)
-  FL.limit = function (b, U, r) {
-    const a = 1.5 * Math.max(U, 0) / Math.sqrt((r > 0 ? r : b.r0) * b.r0);
-    return b.A * Math.exp(-b.k * a) + b.B * a + b.C;
-  };
+  /* ---------- fronteira de inflamabilidade (curva publicada) ----------
+     A curva e o veredito (O₂ mínimo, "queima / no limite / não sustenta") são calculados só pela API do Atlas
+     (/api/flammability/assess). Aqui fica apenas o vento natural, que o simulador usa para posicionar o ignitor. */
   // vento natural da gravidade g (em g da Terra): faixa [lo, hi] em cm/s e, só como referência,
   // a faixa de 1 g escalada por g^(1/3)
   FL.buoy = function (g) {
@@ -232,28 +229,6 @@
     const k = Math.cbrt(g);
     return { lo: 0, hi: f[1], est: [f[0] * k, f[1] * k] };
   };
-  /* Veredito pela curva publicada. U: vento forçado (cm/s) · g: gravidade · X: O2 da atmosfera (%)
-     d: fração de supressor na atmosfera (0 a 1) · key: qual supressor (chave de FL.DILS) · r: raio da amostra (cm).
-     Com gravidade o vento efetivo é uma faixa, então o limite também é: xlo a xm. A chama "queima" só acima de xm
-     e está "no limite" entre os dois. Material sem curva publicada devolve none = true e nenhum número. */
-  FL.judge = function (m, U, g, X, d, key, r) {
-    d = d || 0;
-    const Xe = X * (1 - d), b = m.bnd;
-    if (!b) return { none: true, Ue: U, Ur: [U, U], xm: NaN, xlo: NaN, burns: null, folga: NaN, mode: 'sem_curva', Xe, dmin: null, dmin0: null, band: 0 };
-    const by = FL.buoy(g), u0 = U + by.lo, u1 = U + by.hi;
-    let lo = Infinity, hi = -Infinity;
-    for (let i = 0; i <= 80; i++) { const v = FL.limit(b, u0 + (u1 - u0) * i / 80, r); lo = Math.min(lo, v); hi = Math.max(hi, v); }
-    const k = 100 * ((FL.DILS[key] || {}).sup || 0);
-    const xm = hi + k * d, xlo = lo + k * d, burns = Xe > xm;
-    // fração de supressor em que a extinção passa a ser possível (dmin0) e em que é esperada (dmin): X·(1−d) = limite + k·d
-    const dmin0 = Math.max(0, (X - hi) / (X + k)), dmin = Math.max(0, (X - lo) / (X + k));
-    // vento em que a curva tem o mínimo: abaixo dele a chama morre por falta de ar, acima é soprada
-    const uMin = b.B > 0 ? Math.log(b.A * b.k / b.B) / b.k * Math.sqrt((r > 0 ? r : b.r0) * b.r0) / 1.5 : Infinity;
-    const Ue = (u0 + u1) / 2;
-    const mode = burns ? 'queima' : Xe >= xlo ? 'limite' : X > hi ? 'supressor' : (Ue < uMin ? 'radiacao' : 'sopro');
-    return { Ue, Ur: [u0, u1], xm, xlo, burns, folga: Xe - xm, mode, Xe, dmin, dmin0, band: b.band || 0 };
-  };
-
   /* ---------- geometria da amostra ---------- */
   // meias-dimensões (cm) da forma, dado o tamanho e o domínio
   FL.sampleDim = function (P, h) {

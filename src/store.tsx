@@ -1,5 +1,6 @@
 // Estado do test drive: o cenário escolhido, o passo atual e o que já foi revelado.
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from 'react'
+import { labBlocker } from './lib/gpu'
 import { api, type Answer, type Family, type Investigation, type MatrixCell, type Meta, type NextTest, type Prediction, type Ranked, type Scenario, type Test, type Verdict } from './api'
 
 export type View = 'drive' | 'achados' | 'investigacoes' | 'proximo'
@@ -28,8 +29,6 @@ export interface LabState {
   lit: boolean; igniting: boolean; burning: boolean; measured: boolean; hrr: number; tk: number
   agent: number; agentKey: string; supOn: boolean; o2eff: number; wind: number
   out: { dt: number | null; label: string | null; agent: number } | null
-  // veredito do simulador pela curva publicada pela NASA; none = material sem curva. A tela usa a avaliação da API.
-  judge: { none?: boolean; mode: string; Xe: number; xm?: number; xlo?: number; dmin?: number | null; dmin0?: number | null; burns0?: boolean | null }
   material: string; tier: string; fps: number
 }
 let labState: LabState | null = null
@@ -39,7 +38,8 @@ export const useLab = () => useSyncExternalStore((f) => { labSubs.add(f); return
 
 export const materialOf = (s: Scenario) => MATERIALS.find((m) => m.family === s.family && m.material === (s.material || '')) ?? MATERIALS[0]
 
-export interface LogEntry { id: number; question: string; answer?: Answer; error?: string; pending: boolean }
+// partial: texto que o RAG já escreveu (streaming); verdict: veredito que chega antes do texto
+export interface LogEntry { id: number; question: string; answer?: Answer; error?: string; pending: boolean; partial?: string; verdict?: Verdict }
 
 interface Ctx {
   meta: Meta | null; invs: Investigation[]; tests: Test[]; loadError: string | null
@@ -87,7 +87,8 @@ export function AtlasProvider({ children }: { children: ReactNode }) {
   const vent = wind > 0
   const setVent = useCallback((on: boolean) => setWindRaw(on ? lastWind.current : 0), [])
   const [igniteSeq, setIgniteSeq] = useState(0)
-  const [labOff, setLabOff] = useState<string | null>(null)
+  // modo leve: sem GPU capaz, o simulador nem é carregado (lib/gpu.ts); ele também pode desligar-se depois, se ficar lento
+  const [labOff, setLabOff] = useState<string | null>(() => labBlocker())
   const [described, setDescribed] = useState<string[]>([])
   const [prediction, setPrediction] = useState<Prediction | null>(null)
   const [selectedTest, setSelTest] = useState<string | null>(null)
@@ -161,13 +162,17 @@ export function AtlasProvider({ children }: { children: ReactNode }) {
     if (!question) return
     const id = ++seq.current
     setLog((l) => [{ id, question, pending: true }, ...l])
-    api.ask(question, scenario, conversation.current)
+    const patch = (f: (e: LogEntry) => LogEntry) => setLog((l) => l.map((e) => (e.id === id ? f(e) : e)))
+    api.askStream(question, scenario, conversation.current, {
+      contexto: (c) => patch((e) => ({ ...e, verdict: c.verdict })),
+      texto: (t) => patch((e) => ({ ...e, partial: (e.partial ?? '') + t })),
+    })
       .then((a) => {
         if (a.conversation_id) conversation.current = a.conversation_id
-        setLog((l) => l.map((e) => (e.id === id ? { ...e, answer: a, pending: false } : e)))
+        setLog((l) => l.map((e) => (e.id === id ? { ...e, answer: a, pending: false, partial: undefined } : e)))
         if (a.scenario_changed) setSc({ ...a.scenario, material: a.scenario.material || '', habitat: a.scenario.habitat || '' })
       })
-      .catch((e) => setLog((l) => l.map((x) => (x.id === id ? { ...x, error: e.message, pending: false } : x))))
+      .catch((e) => setLog((l) => l.map((x) => (x.id === id ? { ...x, error: e.message, pending: false, partial: undefined } : x))))
   }, [scenario])
 
   const value = useMemo<Ctx>(() => ({
