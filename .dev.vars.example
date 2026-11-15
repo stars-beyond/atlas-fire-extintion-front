@@ -1,0 +1,2 @@
+# Variáveis do Worker no `npm run cf:dev` (copie para .dev.vars).
+API_ORIGIN=http://localhost:8787
