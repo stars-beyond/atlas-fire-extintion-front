@@ -17,7 +17,7 @@ export const TIER: Record<Tier, { label: string; short: string }> = {
   medido: { label: 'Measured', short: 'A test exists at this condition' },
   delimitado: { label: 'Bounded', short: 'Between 0 g and 1 g' },
   parcial: { label: 'One side only', short: 'Other side missing' },
-  sem_evidencia: { label: 'Terra incognita', short: 'No test here' },
+  sem_evidencia: { label: 'Uncharted', short: 'No test here' },
 }
 // Tier labels as older API versions write them (Portuguese), to recognise the tier in API text.
 export const TIER_API_LABEL: Record<Tier, string> = { medido: 'Medido', delimitado: 'Delimitado', parcial: 'Só um limite', sem_evidencia: 'Terra incógnita' }

@@ -6,7 +6,7 @@ import { materialOf, useAtlas } from '../state'
 import type { NextTest, Tier } from '../types'
 
 export const gapLabel = (n: NextTest) => `${pct(n.o2)} O₂ · ${psi(n.pressure_atm)} · ${gLabel(n.gravity)}`
-const TIER_BY_LABEL = Object.fromEntries((Object.keys(TIER) as Tier[]).flatMap((t) => [[TIER_API_LABEL[t], t], [TIER[t].label, t]])) as Record<string, Tier>
+const TIER_BY_LABEL = Object.fromEntries([['Terra incognita', 'sem_evidencia'], ...(Object.keys(TIER) as Tier[]).flatMap((t) => [[TIER_API_LABEL[t], t], [TIER[t].label, t]])]) as Record<string, Tier>
 // "Rover pressurizado: Terra incógnita → Só um limite"
 function Close({ text }: { text: string }) {
   const m = text.match(/^(.*?):\s*(.*?)\s*→\s*(.*)$/)

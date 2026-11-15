@@ -1,7 +1,7 @@
 {
-  "_": "Modelos 3D da cena dos habitats. Cada vaga com 'file' usa o GLB indicado (nesta pasta); vaga null usa o modelo simples desenhado em código. Para trocar um modelo, ponha o GLB aqui e preencha a vaga. Terrenos em STL: converta com scripts/stl_to_glb.py --top.",
-  "terrain_moon": { "file": "apollo14.glb", "credit": "local de pouso da Apollo 14 (NASA 3D Resources)" },
-  "suit": { "file": "aces-suit.glb", "credit": "traje Advanced Crew Escape Suit (NASA 3D Resources)" },
+  "_": "3D models for the habitat scene. Each slot with 'file' uses that GLB (in this folder); a null slot uses the simple model drawn in code. To swap a model, put the GLB here and fill in the slot. STL terrains: convert with scripts/stl_to_glb.py --top.",
+  "terrain_moon": { "file": "apollo14.glb", "credit": "Apollo 14 landing site (NASA 3D Resources)" },
+  "suit": { "file": "aces-suit.glb", "credit": "Advanced Crew Escape Suit (NASA 3D Resources)" },
   "terrain_mars": null,
   "station": null,
   "habitat": null,
