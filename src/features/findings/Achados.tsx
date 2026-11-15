@@ -20,16 +20,16 @@ export function Achados() {
       <div style={{ display: 'grid', gap: 10 }}>
         <span className="cap">Findings · computed from the PSI experiment tables</span>
         <h1>What the data already say about fire in microgravity</h1>
-        <p className="lede">Start by cross-plotting the variables in NASA's tables yourself; the five ready-made findings and the data audit are in the other tabs.</p>
+        <p className="lede">Start by cross-plotting the variables in NASA's tables yourself; the ready-made findings and the data audit are in the other tabs.</p>
         <div className="tabs" role="tablist" style={{ maxWidth: 620 }}>
           <button role="tab" aria-selected={tab === 'grafico'} onClick={() => setTab('grafico')}>Build your chart</button>
-          <button role="tab" aria-selected={tab === 'achados'} onClick={() => setTab('achados')}>Five findings</button>
+          <button role="tab" aria-selected={tab === 'achados'} onClick={() => setTab('achados')}>Findings</button>
           <button role="tab" aria-selected={tab === 'auditoria'} onClick={() => setTab('auditoria')}>Audit</button>
         </div>
       </div>
       {tab === 'auditoria' ? <Auditoria /> : tab === 'grafico' ? <ChartBuilder /> : (
         <>
-          <p className="lede">Each statement below is recomputed from the loaded tests. The numbers change if ingestion brings in new PSI tables.</p>
+          <p className="lede">Each statement below is recomputed from the loaded tests. The numbers change if ingestion brings in new PSI tables; new investigations and the latest PSI updates get automatic cards.</p>
           {err && <p className="empty">Could not load the findings. {err}</p>}
           {!list && !err && <p className="empty">Computing…</p>}
           <div className="insights">
