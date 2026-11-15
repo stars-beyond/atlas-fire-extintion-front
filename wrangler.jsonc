@@ -7,5 +7,8 @@
   "assets": {
     "directory": "./dist",
     "not_found_handling": "single-page-application"
-  }
+  },
+  // Exigido pelo `wrangler preview`, que o Cloudflare roda nos builds de PR/branch (fora da main).
+  // Pode ficar vazio: assets e compatibility_date são herdados do nível de cima.
+  "previews": {}
 }
