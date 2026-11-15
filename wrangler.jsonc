@@ -1,20 +1,11 @@
-// Deploy no Cloudflare Workers & Pages: um Worker com arquivos estáticos.
-// O build do Vite (dist/) é servido como site; /api/* passa pelo worker/index.ts até o backend.
+// Deploy no Cloudflare Workers & Pages: só arquivos estáticos (o build do Vite em dist/).
+// O site chama a API direto em https://api.atlas-stars-beyond.tech (VITE_API_URL, em .env.production).
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "atlas-fire-extintion-front",
-  "main": "worker/index.ts",
   "compatibility_date": "2026-11-01",
   "assets": {
     "directory": "./dist",
-    "binding": "ASSETS",
-    "not_found_handling": "single-page-application",
-    // só /api/* acorda o Worker; o resto sai direto do cache de arquivos estáticos
-    "run_worker_first": ["/api/*"]
-  },
-  // API_ORIGIN (endereço do backend) fica no painel: Settings → Variables and Secrets.
-  // keep_vars impede que um novo deploy apague o que foi definido lá.
-  // Precisa ser um NOME, não um IP: o Cloudflare bloqueia fetch de Worker para IP (erro 1003).
-  "keep_vars": true,
-  "observability": { "enabled": true }
+    "not_found_handling": "single-page-application"
+  }
 }

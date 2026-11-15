@@ -135,9 +135,8 @@ export type BuiltChart =
   | { kind: 'histogram'; bars: { name: string; count: number }[]; missing: number; used: number }
 export interface TestDetail { test: any; investigation: string; metrics: Record<string, any>; raw: Record<string, string>; source: string }
 
-// Onde a API está. Sem VITE_API_URL, a interface chama /api no mesmo domínio: no Cloudflare o Worker
-// (worker/index.ts) repassa para o backend; no `npm run dev`, o proxy do Vite faz o mesmo.
-// Com VITE_API_URL (ex.: https://api.seudominio.com), o navegador chama a API direto (ela já libera CORS).
+// Onde a API está. Em produção, VITE_API_URL (.env.production) = https://api.atlas-stars-beyond.tech e o
+// navegador chama a API direto (ela libera CORS). Sem VITE_API_URL (npm run dev), usa /api pelo proxy do Vite.
 export const API_BASE = (import.meta.env.VITE_API_URL ?? '').trim().replace(/\/+$/, '') + '/api'
 export const apiUrl = (path: string) => API_BASE + path
 
