@@ -1,0 +1,12 @@
+/* Painel: taxa dos testes reais (EmpiricalRate).
+   Ordem e conteúdo iguais ao trecho original do theme.css; veja a ordem dos @import em index.css. */
+.emp { display: grid; gap: 10px; padding: 14px 16px; border: 1px solid var(--line-2); border-radius: 14px; background: var(--ink-2); }
+.emp-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.emp-head b { font-family: var(--display); font-size: 30px; font-weight: 700; line-height: 1; white-space: nowrap; }
+.emp-head span { color: var(--dim); font-size: 13.5px; flex: 1; min-width: 12ch; }
+.emp-bar { display: flex; height: 12px; border-radius: 6px; overflow: hidden; gap: 2px; background: var(--ink-4); }
+.emp-bar i { display: block; min-width: 4px; }
+.emp-legend { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12.5px; color: var(--dim); }
+.emp-legend li { display: inline-flex; align-items: center; gap: 6px; }
+.emp-legend i { width: 9px; height: 9px; border-radius: 50%; }
+.emp-legend i.hatch { background: repeating-linear-gradient(45deg, var(--faint) 0 2px, transparent 2px 4px); }

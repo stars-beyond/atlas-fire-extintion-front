@@ -1,0 +1,27 @@
+/* Perguntar: caixa de pergunta, exemplos, respostas em Markdown, citações e fontes.
+   Ordem e conteúdo iguais ao trecho original do theme.css; veja a ordem dos @import em index.css. */
+.askbox { display: grid; gap: 10px; }
+.askbox textarea { resize: vertical; min-height: 76px; background: var(--ink-0); border: 1.5px solid var(--line-2); border-radius: 12px; padding: 12px 14px; }
+.askbox .cta { justify-self: start; }
+.chips { display: grid; gap: 8px; }
+.chips button { border: 1px dashed var(--line-2); border-radius: 12px; padding: 10px 14px; color: var(--dim); }
+.chips button:hover { color: var(--text); border-color: var(--g0); border-style: solid; }
+.qa { display: grid; gap: 10px; padding-top: 16px; border-top: 1px solid var(--line); }
+.qa h3 { font-size: 17px; }
+.md { line-height: 1.6; display: grid; gap: 10px; min-width: 0; overflow-wrap: anywhere; }
+.md p, .md ul, .md ol { margin: 0; } .md ul, .md ol { padding-left: 20px; display: grid; gap: 4px; }
+.md h1, .md h2, .md h3, .md h4 { font-size: 16px; margin: 4px 0 0; }
+.md code { font-family: var(--mono); font-size: 12px; background: var(--ink-3); padding: 1px 5px; border-radius: 4px; }
+.md .katex-display { margin: 4px 0; padding: 10px 12px; background: var(--ink-2); border-radius: 10px; overflow-x: auto; overflow-y: hidden; }
+.md .katex { font-size: 1.05em; }
+.md table { font-size: 13px; } .md th, .md td { padding: 6px 8px; }
+.md a { color: var(--g0); }
+.source a.excerpt { color: var(--g0); }
+.cite { display: inline-grid; place-items: center; min-width: 20px; height: 20px; padding: 0 5px; margin: 0 2px; border-radius: 6px; background: var(--ink-4); color: var(--act); font-family: var(--mono); font-size: 10.5px; vertical-align: 1px; flex: none; }
+button.cite:hover { background: var(--act); color: var(--act-ink); }
+.sources { display: grid; gap: 6px; }
+.source { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 10px; background: var(--ink-2); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; width: 100%; }
+.source:hover { border-color: var(--dim); }
+.source > span:last-child { display: grid; gap: 2px; min-width: 0; }
+.source b { font-weight: 500; font-size: 13.5px; }
+.excerpt { font-size: 13px; color: var(--dim); margin-top: 4px; }

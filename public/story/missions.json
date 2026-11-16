@@ -1,0 +1,38 @@
+{
+ "source": "stars-beyond/mission-fire-engine",
+ "engine_commit": "c7d4427",
+ "engine_commit_date": "2026-11-15T16:52:45-03:00",
+ "generated_at": "2026-11-15T21:10:16Z",
+ "missions": {
+  "demo-lunar": {
+   "name": "Jornada lunar · nave, base e rover",
+   "description": "Trânsito a 21%/101,3 kPa; base e rover a 30%/70,3 kPa. Uma falha opcional de ventilação no trânsito ilustra a detecção.",
+   "file": "demo-lunar.json"
+  },
+  "demo-marte": {
+   "name": "Terra → Marte com falhas encadeadas",
+   "description": "Regulador de O₂ travado (dia 120), bomba degradada (dia 180) e falha de ventilação (dia 200).",
+   "file": "demo-marte.json"
+  },
+  "mergulho-solar": {
+   "name": "Mergulho a 0,5 UA, sem falhas",
+   "description": "Só a trajetória: a irradiância quadruplica e o controle térmico satura.",
+   "file": "mergulho-solar.json"
+  },
+  "lua-exploracao": {
+   "name": "Lua com atmosfera de 30% O₂",
+   "description": "Base lunar na atmosfera do enunciado, com falha de ventilação no dia 10.",
+   "file": "lua-exploracao.json"
+  },
+  "marte-nominal": {
+   "name": "Terra → Marte nominal",
+   "description": "Linha de base, sem falhas.",
+   "file": "marte-nominal.json"
+  },
+  "bateria-modulo": {
+   "name": "Fuga térmica de bateria num módulo de 29,7 m³",
+   "description": "Oito células KULR 21700-K500 em fuga térmica no dia 150, num módulo com o volume livre do ATV do artigo da NASA.",
+   "file": "bateria-modulo.json"
+  }
+ }
+}

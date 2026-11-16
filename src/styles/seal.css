@@ -1,0 +1,15 @@
+/* Selo de evidência (componente compartilhado).
+   Ordem e conteúdo iguais ao trecho original do theme.css; veja a ordem dos @import em index.css. */
+/* ---------- selo de evidência */
+.seal { display: flex; align-items: center; gap: 12px; }
+.seal-glyph { width: 40px; height: 40px; border-radius: 50%; flex: none; border: 2.5px solid currentColor; position: relative; overflow: hidden; }
+.seal-glyph::after { content: ''; position: absolute; inset: 3px; border-radius: 50%; background: currentColor; }
+.seal.t-delimitado .seal-glyph::after { clip-path: inset(0 50% 0 0); }
+.seal.t-parcial .seal-glyph::after { clip-path: inset(0 75% 0 0); }
+.seal.t-sem_evidencia .seal-glyph::after { background: repeating-linear-gradient(45deg, currentColor 0 2px, transparent 2px 6px); opacity: .85; }
+.seal.t-medido { color: var(--medido); } .seal.t-delimitado { color: var(--delimitado); } .seal.t-parcial { color: var(--parcial); } .seal.t-sem_evidencia { color: var(--incognita); }
+.seal-label { font-family: var(--display); font-size: 20px; font-weight: 700; line-height: 1.05; }
+.seal-sub { color: var(--dim); font-size: 12.5px; }
+.seal.big .seal-glyph { width: 60px; height: 60px; } .seal.big .seal-label { font-size: 32px; } .seal.big .seal-sub { font-size: 14px; }
+/* veredito (ou lista) ainda do cenário anterior, enquanto o do cenário atual não chega */
+.stale { opacity: .55; transition: opacity .15s; }

@@ -1,0 +1,25 @@
+/* Casca do app: grade da tela, cabeçalho, etapas, atalhos do acervo, e a divisão palco + painel do test drive.
+   Ordem e conteúdo iguais ao trecho original do theme.css; veja a ordem dos @import em index.css. */
+/* ---------- moldura */
+.shell { height: 100dvh; display: grid; grid-template-rows: auto minmax(0, 1fr) auto; }
+.shell.browsing { grid-template-rows: auto minmax(0, 1fr); }
+.top { display: flex; align-items: center; gap: 24px; padding: 12px 22px; border-bottom: 1px solid var(--line); background: var(--ink-0); }
+.brand { display: flex; align-items: center; gap: 10px; font-family: var(--display); font-size: 18px; font-weight: 650; white-space: nowrap; }
+.brand-mark { width: 24px; height: 24px; border-radius: 50%; background: radial-gradient(circle, #dcefff 0 20%, var(--g0) 42%, rgba(95,176,255,.15) 70%, transparent 72%); }
+.stepper { display: flex; list-style: none; padding: 0; gap: 4px; margin: 0 auto; }
+.stepper button { display: flex; align-items: center; gap: 9px; padding: 7px 14px 7px 8px; border-radius: 99px; color: var(--faint); white-space: nowrap; }
+.stepper button:hover:not(:disabled) { color: var(--text); background: var(--ink-2); }
+.stepper button:disabled { opacity: .45; cursor: default; }
+.stepper .n { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font-family: var(--mono); font-size: 11px; border: 1.5px solid var(--ink-4); }
+.stepper .done .n { background: var(--medido); border-color: var(--medido); color: #05231a; }
+.stepper [aria-current] { color: var(--text); background: var(--ink-2); }
+.stepper [aria-current] .n { background: var(--act); border-color: var(--act); color: var(--act-ink); }
+.more { display: flex; gap: 4px; }
+.more button, .ghost { padding: 8px 14px; border-radius: 8px; color: var(--dim); white-space: nowrap; }
+.more button:hover, .ghost:hover { color: var(--text); background: var(--ink-2); }
+.more button[aria-pressed='true'] { color: var(--text); background: var(--ink-3); }
+.ghost { border: 1px solid var(--line-2); }
+
+.drive { display: grid; grid-template-columns: minmax(0, 1fr) clamp(380px, 34vw, 480px); min-height: 0; }
+.panel { overflow-y: auto; background: var(--ink-1); border-left: 1px solid var(--line); padding: 30px 28px 28px; animation: enter .35s ease both; }
+@keyframes enter { from { opacity: 0; transform: translateY(8px); } }

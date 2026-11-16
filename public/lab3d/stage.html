@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3D flame simulator</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #070b11; overflow: hidden; }
+  #viewport { position: absolute; inset: 0; }
+  canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  #ov { touch-action: none; cursor: grab; outline: none; }
+</style>
+</head>
+<body>
+<div id="viewport">
+  <canvas id="gl"></canvas>
+  <canvas id="ov" tabindex="0" aria-label="Simulated 3D flame. Drag to rotate."></canvas>
+</div>
+<!-- Solver e renderizador do Laboratório de chama 3D da equipe (lab3d): model, shaders e sim são cópias de cflame-in-freefall/lab3d/js. -->
+<script src="model.js"></script>
+<script src="glutil.js"></script>
+<script src="shaders.js"></script>
+<script src="sim.js"></script>
+<script src="view.js"></script>
+<script src="bridge.js"></script>
+</body>
+</html>

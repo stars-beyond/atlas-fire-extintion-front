@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "ES2022", "lib": ["ES2022", "DOM", "DOM.Iterable"], "module": "ESNext", "moduleResolution": "bundler",
+    "jsx": "react-jsx", "strict": true, "skipLibCheck": true, "noEmit": true, "isolatedModules": true,
+    "resolveJsonModule": true, "allowSyntheticDefaultImports": true,
+    "noUnusedLocals": true, "noUnusedParameters": true, "noFallthroughCasesInSwitch": true,
+    // Sem os tipos globais do Node (@types/node, que o vite.config.ts e os testes usam): este é o código que roda
+    // no navegador, onde `process` e `Buffer` não existem. O que roda no Node é checado por tsconfig.node.json.
+    "types": []
+  },
+  "include": ["src"],
+  "exclude": ["src/**/*.test.ts"]
+}

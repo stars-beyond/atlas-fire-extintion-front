@@ -1,0 +1,57 @@
+/* Telas médias, telas baixas, celular, movimento reduzido e impressão.
+   Ordem e conteúdo iguais ao trecho original do theme.css; veja a ordem dos @import em index.css. */
+/* ---------- telas médias: tudo continua cabendo na janela, só com menos adorno */
+.panel { container-type: inline-size; }
+.stage { container-type: inline-size; }
+@container (max-width: 560px) {
+  .gauges { flex-direction: column; gap: 10px; bottom: 44px; }
+  .gauges b { font-size: 24px; } .gauges div { grid-template-columns: auto auto; align-items: baseline; gap: 8px; justify-content: start; } .gauges span { margin: 0; }
+  .stage-mat { font-size: 22px; }
+}
+@container (max-width: 400px) {
+  .options { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .option { grid-template-columns: 56px minmax(0, 1fr); column-gap: 12px; min-height: 0; padding: 11px 12px; align-items: center; }
+  .option-art, .swatch-lg { grid-row: 1 / span 3; margin: 0; align-self: center; }
+  .option-art { width: 56px; height: 36px; }
+  .option-name, .option-sub, .option-spec { grid-column: 2; }
+  .counts b { font-size: 22px; } .seal.big .seal-label { font-size: 26px; } .seal.big .seal-glyph { width: 48px; height: 48px; }
+}
+@media (max-width: 1100px) {
+  .top { flex-wrap: wrap; gap: 8px 16px; padding: 10px 16px; }
+  .stepper { order: 3; width: 100%; margin: 0; justify-content: space-between; }
+  .stepper button { padding: 5px 12px 5px 6px; }
+  .more { margin-left: auto; }
+  .drive { grid-template-columns: minmax(0, 1fr) clamp(300px, 42vw, 440px); }
+  .panel { padding: 20px 18px 22px; }
+  .step { gap: 16px; } .step-head h1 { font-size: 24px; } .step-head p { font-size: 14.5px; }
+  .bar { gap: 14px; padding: 10px 16px; }
+  .bar-specs { display: none; }
+  .bar-ev { border-left: 0; padding-left: 0; flex: 1; min-width: 0; }
+  .stage-top { left: 16px; right: 16px; top: 14px; } .gauges { left: 16px; gap: 18px; bottom: 46px; } .stage-hint { left: 16px; right: 16px; bottom: 14px; } .stage-foot { padding: 24px 16px 14px; }
+  .split { grid-template-columns: minmax(0, 1fr); }
+  .page-in { padding: 20px 16px 36px; }
+}
+@media (max-height: 560px) and (min-width: 701px) {
+  .top { padding-block: 6px; } .stepper .n { width: 20px; height: 20px; } .bar { padding-block: 8px; } .cta { padding: 9px 18px; }
+  .gauges b { font-size: 24px; } .stage-mat { font-size: 22px; }
+}
+/* ---------- celular: palco em cima, passo embaixo, barra fixa */
+@media (max-width: 700px) {
+  .shell { height: auto; min-height: 100dvh; grid-template-rows: auto auto auto; }
+  .drive { grid-template-columns: minmax(0, 1fr); }
+  .stage { height: clamp(240px, 40vh, 380px); }
+  .scene-credit { display: none; }
+  .panel { border-left: 0; border-top: 1px solid var(--line); overflow: visible; padding: 20px 16px 24px; }
+  .bar { position: sticky; bottom: 0; z-index: 6; }
+  .stepper .l { display: none; } .stepper [aria-current] .l { display: inline; }
+  .toggle button { padding: 6px 10px; font-size: 12.5px; }
+  .bar .ghost { display: none; } .bar .seal-sub { display: none; } .bar .seal-label { font-size: 16px; } .bar .seal-glyph { width: 30px; height: 30px; }
+}
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+@media print {
+  .page { overflow: visible; } .fire-queue, .fire-now, .fire-head p { display: none; } .fire-split { display: block; }
+  .sheet { border: 0; background: #fff; padding: 0; } .sheet p, .sheet .plain, .sheet .kv dt, .sheet h3, .sheet .mono, .sheet .note { color: #333 !important; } .sheet-lunar { color: #111 !important; }
+  body { background: #fff; color: #111; } .top, .bar, .stage, .no-print { display: none !important; }
+  .shell { display: block; height: auto; } .drive { display: block; } .panel { border: 0; background: #fff; overflow: visible; padding: 0; }
+  .step-head p, .block > p, .row-main span, .hint, .plain, .seal-sub { color: #444 !important; } .row, .counts div, .specs div { background: #f3f3f3; border-color: #ddd; }
+}

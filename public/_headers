@@ -1,0 +1,30 @@
+# Cabeçalhos dos arquivos estáticos no Cloudflare (Workers static assets / Pages).
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/models/*
+  Cache-Control: public, max-age=604800
+
+/draco/*
+  Cache-Control: public, max-age=604800
+
+# Segurança, em toda resposta.
+#
+# Content-Security-Policy: o que a página pode carregar e de onde. Cada origem aqui tem um motivo:
+#   script-src 'wasm-unsafe-eval'   o decodificador Draco dos modelos 3D é WebAssembly
+#   script-src/connect-src cloudflareinsights   o Cloudflare Web Analytics, que o Cloudflare injeta na página
+#                                   (o script vem de static.cloudflareinsights.com e envia para cloudflareinsights.com)
+#   worker-src blob:                o three.js roda esse decodificador num worker criado a partir de um blob
+#   style-src 'unsafe-inline'       React, Recharts e KaTeX escrevem estilos no próprio elemento
+#   img-src data: blob:             texturas dos modelos 3D e imagens geradas na página
+#   img-src/connect-src jsdelivr    texturas de planetas do modo Story (src/features/story/scene.ts)
+#   connect-src api.atlas-…         a API do Atlas; data: e blob: são os buffers dos modelos 3D
+#   frame-src / frame-ancestors     só o próprio site: o simulador de chama é um iframe dele mesmo, e nenhum outro
+#                                   site pode embutir o Atlas
+# Ao usar uma origem nova (outra API, outra CDN), acrescente aqui: sem isso o navegador bloqueia e o console avisa.
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Strict-Transport-Security: max-age=31536000
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'wasm-unsafe-eval' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://cdn.jsdelivr.net; font-src 'self' data:; connect-src 'self' data: blob: https://api.atlas-stars-beyond.tech https://cdn.jsdelivr.net https://cloudflareinsights.com; worker-src 'self' blob:; frame-src 'self'; frame-ancestors 'self'; base-uri 'self'; form-action 'self'; object-src 'none'

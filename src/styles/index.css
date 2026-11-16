@@ -1,0 +1,31 @@
+/* Atlas de Extinção · configurador com test drive.
+   Layout: palco grande à esquerda, um passo por vez à direita, barra de resumo embaixo (como num site de carro).
+   Cor é dado: azul = microgravidade, laranja = gravidade da Terra. O amarelo é só da ação principal. */
+
+/* Os arquivos vêm na MESMA ORDEM em que as regras estavam no theme.css original, para a cascata não mudar.
+   Por isso uma área pode aparecer em mais de um arquivo (o palco, por exemplo, está em stage*.css).
+   Uma regra nova que dependa da ordem vai no último arquivo importado. */
+@import './tokens.css';
+@import './base.css';
+@import './app-shell.css';
+@import './stage.css';
+@import './findings-audit.css';
+@import './next-fire.css';
+@import './stage-cards.css';
+@import './configurator.css';
+@import './ask.css';
+@import './configurator-ficha.css';
+@import './seal.css';
+@import './app-specbar.css';
+@import './pages.css';
+@import './configurator-describe.css';
+@import './stage-graph.css';
+@import './configurator-empirical.css';
+@import './app-boot.css';
+@import './app-responsive.css';
+@import './stage-views.css';
+@import './configurator-panel.css';
+@import './ask-streaming.css';
+@import './home.css';
+@import './story.css';
+@import './dashboard.css';

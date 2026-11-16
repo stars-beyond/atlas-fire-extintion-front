@@ -1,0 +1,8 @@
+/* Configurador: "Ou descreva com suas palavras".
+   Ordem e conteúdo iguais ao trecho original do theme.css; veja a ordem dos @import em index.css. */
+.describe { display: grid; gap: 8px; padding: 14px; border: 1px dashed var(--line-2); border-radius: 14px; }
+.describe label { font-size: 13.5px; color: var(--dim); }
+.describe-row { display: flex; gap: 8px; }
+.describe-row input { flex: 1; min-width: 0; background: var(--ink-0); border: 1.5px solid var(--line-2); border-radius: 10px; padding: 10px 12px; }
+.describe-row .cta { padding: 10px 16px; }
+.describe > .cta { justify-self: start; }

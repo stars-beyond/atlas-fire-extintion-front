@@ -1,0 +1,4 @@
+/* Tela de abertura (carregando ou erro ao falar com a API).
+   Ordem e conteúdo iguais ao trecho original do theme.css; veja a ordem dos @import em index.css. */
+.boot { height: 100dvh; display: grid; place-content: center; gap: 12px; text-align: center; padding: 24px; justify-items: center; color: var(--dim); }
+.boot h1 { color: var(--text); }

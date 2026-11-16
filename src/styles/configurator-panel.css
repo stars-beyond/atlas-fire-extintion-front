@@ -1,0 +1,74 @@
+/* Painel: seções, taxa dos testes reais, quem estudou, o que falta testar.
+   Ordem e conteúdo iguais ao trecho original do theme.css; veja a ordem dos @import em index.css. */
+/* ---------- painel: seções, taxa dos testes reais, quem estudou, o que falta */
+.section { padding-top: 20px; border-top: 1px solid var(--line); gap: 12px; }
+.section h2 { margin-top: 0; font-size: 22px; }
+.emp-head b { color: var(--g1); }
+.emp-head span { font-size: 15px; color: var(--text); }
+.emp-by { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 6px; }
+.emp-by li { display: grid; background: var(--ink-1); border-radius: 8px; padding: 6px 10px; font-size: 12.5px; color: var(--dim); }
+.emp-by b { color: var(--text); font-weight: 600; font-size: 13px; }
+.callout { display: grid; gap: 2px; width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--incognita); background: rgba(239,122,156,.08); font-size: 13.5px; color: var(--dim); }
+.callout b { color: var(--text); font-size: 14.5px; } .callout:hover { background: rgba(239,122,156,.14); }
+
+.studies { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.study { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 8px 12px; width: 100%; background: var(--ink-2); border: 1px solid var(--line); border-radius: 14px; padding: 14px; transition: border-color .15s; }
+.study:hover { border-color: var(--dim); }
+.study > * { grid-column: 2; }
+.study-rank { grid-column: 1; grid-row: 1; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-family: var(--mono); font-size: 12px; border: 1.5px solid var(--ink-4); color: var(--dim); }
+.study-head { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; justify-content: space-between; }
+.study-head b { font-family: var(--display); font-size: 18px; line-height: 1.15; }
+.study-tags { display: inline-flex; gap: 4px; }
+.study-near { font-size: 13.5px; color: var(--parcial); border-left: 3px solid var(--parcial); padding-left: 9px; line-height: 1.35; }
+.study-near.ok { color: var(--medido); border-color: var(--medido); }
+.study-why { margin: 0; padding-left: 18px; display: grid; gap: 2px; font-size: 13px; color: var(--dim); }
+.study-meters { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 14px; font-size: 11.5px; color: var(--faint); }
+.study-meters > span { display: grid; gap: 3px; }
+.study-meters i { display: block; height: 5px; border-radius: 3px; background: var(--ink-4); overflow: hidden; }
+.study-meters i i { background: var(--g0); border-radius: 3px; }
+
+.gaps { display: grid; gap: 10px; }
+.gaps > p { color: var(--dim); max-width: 52ch; }
+.gap { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 12px; background: var(--ink-2); border: 1px solid var(--line); border-left: 3px solid var(--incognita); border-radius: 14px; padding: 14px; }
+.gap.on { border-color: var(--act); }
+.gap-rank { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-family: var(--mono); font-size: 12px; font-weight: 600; background: var(--incognita); color: var(--ink-0); }
+.gap-main { display: grid; gap: 5px; min-width: 0; }
+.gap-main > b { font-family: var(--display); font-size: 17px; line-height: 1.2; }
+.gap-where { font-size: 13px; color: var(--dim); }
+.gap-closes { list-style: none; margin: 2px 0 0; padding: 0; display: grid; gap: 4px; font-size: 13px; color: var(--dim); }
+.gap-closes li { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; }
+.gap-closes b { color: var(--text); font-weight: 600; margin-right: 2px; }
+.gap-tier { border: 1px solid currentColor; border-radius: 99px; padding: 0 8px; font-size: 11.5px; white-space: nowrap; }
+.gap-tier.t-medido { color: var(--medido); } .gap-tier.t-delimitado { color: var(--delimitado); } .gap-tier.t-parcial { color: var(--parcial); } .gap-tier.t-sem_evidencia { color: var(--incognita); }
+.gap-main .link { font-size: 13px; }
+.tabs button { padding: 10px 4px; font-size: 13.5px; }
+@media print { .gap, .study { background: #f3f3f3; border-color: #ddd; } .gap-where, .gap-closes, .study-why, .study-near, .gaps > p { color: #444 !important; } }
+
+/* ---------- velocidade de propagação (modelo da equipe, só para o acrílico) */
+.spread { display: grid; gap: 10px; padding: 14px; border: 1px solid var(--line); border-radius: 14px; }
+.spread h2 { margin: 0; font-size: 19px; }
+.spread .result b { color: var(--text); white-space: nowrap; }
+.spread-g { border-left: 3px solid var(--parcial); padding-left: 9px; color: var(--dim); }
+.spread-more { font-size: 13px; color: var(--dim); }
+.spread-more summary { cursor: pointer; color: var(--text); padding: 4px 0; }
+.spread-more > * + * { margin-top: 8px; }
+.spread-more ul { margin: 8px 0 0; padding-left: 18px; display: grid; gap: 4px; }
+.spread-more table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.spread-more th, .spread-more td { text-align: left; padding: 5px 9px; white-space: nowrap; }
+.spread-more th { color: var(--faint); font-weight: 500; }
+.spread-more .mono { font-size: 11.5px; color: var(--faint); line-height: 1.5; overflow-wrap: anywhere; }
+.section > .spread { border: 0; padding: 0; }
+@media print { .spread { border-color: #ddd; } .spread-g, .spread-more { color: #444 !important; } }
+/* a ficha não pode alargar além do painel: um botão de linha única (fila do próximo fogo) empurrava a coluna e cortava o texto à direita */
+.step.ficha { grid-template-columns: minmax(0, 1fr); }
+.step.ficha .ghost { white-space: normal; }
+
+/* ---------- evidência de fora da NASA (torre de queda do ZARM): sempre com a cor própria */
+.ext { display: grid; gap: 10px; padding: 14px; border: 1px solid var(--line); border-left: 3px solid var(--ext); border-radius: 14px; }
+.ext > p { color: var(--dim); max-width: 52ch; }
+.ext .eyebrow { display: flex; align-items: center; gap: 7px; }
+.ext-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ext); flex: none; }
+.tag.ext-tag { color: var(--ext); border-color: var(--ext); }
+.ext a { color: inherit; text-decoration: underline; }
+.section > .ext { border: 0; border-left: 3px solid var(--ext); border-radius: 0; padding: 0 0 0 12px; }
+@media print { .ext { border-color: #ddd; } .ext > p { color: #444 !important; } }

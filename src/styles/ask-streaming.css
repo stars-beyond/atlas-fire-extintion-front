@@ -1,0 +1,6 @@
+/* Perguntar: resposta chegando aos pedaços.
+   Ordem e conteúdo iguais ao trecho original do theme.css; veja a ordem dos @import em index.css. */
+/* resposta chegando aos pedaços (SSE): mesmo texto, um pouco mais apagado até a versão final validada */
+.qa .streaming { opacity: 0.86; }
+/* o botão Stop da resposta em curso: do tamanho do texto, não da coluna */
+.qa .ghost { justify-self: start; }
